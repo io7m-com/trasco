@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:st="urn:com.io7m.trasco.database.statements:1:0"
+            targetNamespace="urn:com.io7m.trasco.database.statements:1:0">
+
+  <xsd:element name="Comment">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Comment" element allows for specifying documentation for statements.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+  </xsd:element>
+
+  <xsd:element name="Statement">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Statement" element specifies a single SQL statement.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+  </xsd:element>
+
+  <xsd:element name="Schema">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Schema" element specifies a sequence of SQL statements. SQL statements will be executed in declaration
+        order.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1"
+                    maxOccurs="unbounded">
+        <xsd:choice minOccurs="1"
+                    maxOccurs="1">
+          <xsd:element ref="st:Statement"/>
+          <xsd:element ref="st:Comment"/>
+        </xsd:choice>
+      </xsd:sequence>
+
+      <xsd:attribute name="versionCurrent"
+                     type="xsd:nonNegativeInteger"
+                     use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            The version number of the schema these statements describe.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="Schemas">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Schemas" element specifies a set of SQL schemas.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0"
+                    maxOccurs="unbounded">
+        <xsd:element ref="st:Schema"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:key name="SchemaVersionKey">
+      <xsd:selector xpath="st:Schema|st:SchemaUpdate"/>
+      <xsd:field xpath="@versionCurrent"/>
+    </xsd:key>
+  </xsd:element>
+
+</xsd:schema>
