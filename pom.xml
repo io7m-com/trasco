@@ -35,9 +35,6 @@
     <derby.version>10.15.2.0</derby.version>
     <jqwik.version>1.6.4</jqwik.version>
     <junit.version>5.8.2</junit.version>
-
-    <!-- https://issues.apache.org/jira/browse/MDEP-774 -->
-    <mdep.analyze.skip>true</mdep.analyze.skip>
   </properties>
 
   <licenses>
@@ -122,6 +119,11 @@
       <dependency>
         <groupId>com.io7m.anethum</groupId>
         <artifactId>com.io7m.anethum.api</artifactId>
+        <version>0.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.anethum</groupId>
+        <artifactId>com.io7m.anethum.common</artifactId>
         <version>0.0.1</version>
       </dependency>
       <dependency>
@@ -229,6 +231,11 @@
         <groupId>org.apache.derby</groupId>
         <artifactId>derbynet</artifactId>
         <version>${derby.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.junreachable</groupId>
+        <artifactId>com.io7m.junreachable.core</artifactId>
+        <version>3.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
