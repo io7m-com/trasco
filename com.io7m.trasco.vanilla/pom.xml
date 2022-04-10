@@ -16,7 +16,7 @@
 
   <name>com.io7m.trasco.vanilla</name>
   <description>SQL revision system (Vanilla implementation)</description>
-  <url>https://www.github.com/io7m/trasco</url>
+  <url>https://www.io7m.com/software/trasco</url>
 
   <dependencies>
     <dependency>

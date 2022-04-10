@@ -18,7 +18,7 @@
   <packaging>pom</packaging>
   <name>com.io7m.trasco</name>
   <description>SQL revision system</description>
-  <url>https://www.github.com/io7m/trasco</url>
+  <url>https://www.io7m.com/software/trasco</url>
 
   <modules>
     <module>com.io7m.trasco.api</module>
