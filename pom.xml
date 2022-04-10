@@ -33,7 +33,7 @@
     <com.io7m.xstructural.version>1.4.0</com.io7m.xstructural.version>
     <io7m.api.previousVersion>0.0.1-SNAPSHOT</io7m.api.previousVersion>
     <derby.version>10.15.2.0</derby.version>
-    <jqwik.version>1.6.4</jqwik.version>
+    <jqwik.version>1.6.5</jqwik.version>
     <junit.version>5.8.2</junit.version>
   </properties>
 
