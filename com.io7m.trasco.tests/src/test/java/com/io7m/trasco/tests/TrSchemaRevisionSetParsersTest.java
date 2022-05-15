@@ -20,7 +20,6 @@ package com.io7m.trasco.tests;
 import com.io7m.anethum.common.ParseException;
 import com.io7m.trasco.api.TrSchemaRevision;
 import com.io7m.trasco.vanilla.TrSchemaRevisionSetParsers;
-import com.io7m.trasco.vanilla.TrSchemaRevisionSetSQL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
@@ -38,7 +37,6 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class TrSchemaRevisionSetParsersTest

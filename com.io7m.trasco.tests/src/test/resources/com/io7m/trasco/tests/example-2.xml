@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Schemas xmlns="urn:com.io7m.trasco.database.statements:1:0">
+  <Schema versionCurrent="0">
+    <Statement><![CDATA[
+create role egg
+]]>
+    </Statement>
+    <Statement><![CDATA[
+grant select, insert, update on something to egg
+]]>
+    </Statement>
+    <Statement><![CDATA[
+drop role egg
+]]>
+    </Statement>
+  </Schema>
+</Schemas>
