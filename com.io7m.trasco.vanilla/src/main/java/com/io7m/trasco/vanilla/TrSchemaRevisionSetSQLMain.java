@@ -14,10 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.trasco.vanilla;
 
 import java.nio.file.Paths;
+import java.util.EnumSet;
 
 import static com.io7m.trasco.vanilla.TrSchemaRevisionSetSQL.showSQLStatements;
 
@@ -44,9 +44,9 @@ public final class TrSchemaRevisionSetSQLMain
     final String[] args)
     throws Exception
   {
-    if (args.length != 2) {
-      System.err.println("usage: input.xml output.sql");
-      throw new IllegalArgumentException("usage: input.xml output.sql");
+    if (args.length < 2) {
+      System.err.println("usage: input.xml output.sql [excludes ...]");
+      throw new IllegalArgumentException("usage: input.xml output.sql [excludes ...]");
     }
 
     final var input =
@@ -54,6 +54,13 @@ public final class TrSchemaRevisionSetSQLMain
     final var output =
       Paths.get(args[1]);
 
-    showSQLStatements(input, output);
+    final var exclusions =
+      EnumSet.noneOf(TrStatementExclusion.class);
+
+    for (int index = 2; index < args.length; ++index) {
+      exclusions.add(TrStatementExclusion.valueOf(args[index]));
+    }
+
+    showSQLStatements(input, output, exclusions);
   }
 }

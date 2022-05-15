@@ -9,14 +9,14 @@
   <parent>
     <artifactId>com.io7m.trasco</artifactId>
     <groupId>com.io7m.trasco</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
   <artifactId>com.io7m.trasco.api</artifactId>
 
   <name>com.io7m.trasco.api</name>
   <description>SQL revision system (API)</description>
-  <url>https://www.github.com/io7m/trasco</url>
+  <url>https://www.io7m.com/software/trasco</url>
 
   <dependencies>
     <dependency>
@@ -33,10 +33,6 @@
     <dependency>
       <groupId>com.io7m.anethum</groupId>
       <artifactId>com.io7m.anethum.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
 
