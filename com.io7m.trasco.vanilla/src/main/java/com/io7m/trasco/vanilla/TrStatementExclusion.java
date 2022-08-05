@@ -33,5 +33,11 @@ public enum TrStatementExclusion
    * Exclude grants.
    */
 
-  GRANTS
+  GRANTS,
+
+  /**
+   * Exclude functions.
+   */
+
+  FUNCTIONS
 }
