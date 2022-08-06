@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
 
+import static com.io7m.trasco.vanilla.TrStatementExclusion.FUNCTIONS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.GRANTS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.ROLES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -92,6 +93,28 @@ public final class TrSchemeRevisionSetSQLTest
     assertEquals("create role egg;", lines.get(0));
     assertEquals("drop role egg;", lines.get(1));
     assertEquals(2, lines.size());
+  }
+
+  @Test
+  public void testExcludeFunctions()
+    throws Exception
+  {
+    final var input =
+      this.resourceOf("example-3.xml");
+    final var output =
+      this.directory.resolve("out.sql");
+
+    TrSchemaRevisionSetSQL.showSQLStatements(
+      input,
+      output,
+      EnumSet.of(FUNCTIONS)
+    );
+
+    final var lines = Files.lines(output).toList();
+    assertEquals("create role egg;", lines.get(0));
+    assertEquals("grant select, insert, update on something to egg;", lines.get(1));
+    assertEquals("drop role egg;", lines.get(2));
+    assertEquals(3, lines.size());
   }
 
   @Test

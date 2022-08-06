@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 
+import static com.io7m.trasco.vanilla.TrStatementExclusion.FUNCTIONS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.GRANTS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.ROLES;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -96,25 +98,67 @@ public final class TrSchemaRevisionSetSQL
     }
   }
 
+  private static boolean isCreateRoleExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("CREATE ROLE")
+           && exclusions.contains(ROLES);
+  }
+
+  private static boolean isDropRoleExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("DROP ROLE")
+           && exclusions.contains(ROLES);
+  }
+
+  private static boolean isGrantExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("GRANT")
+           && exclusions.contains(GRANTS);
+  }
+
+  private static boolean isCreateFunctionExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("CREATE FUNCTION")
+           && exclusions.contains(FUNCTIONS);
+  }
+
+  private static boolean isDropFunctionExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("DROP FUNCTION")
+           && exclusions.contains(FUNCTIONS);
+  }
+
+  private interface ExclusionType
+  {
+    boolean isExcluded(
+      EnumSet<TrStatementExclusion> exclusions,
+      String statement);
+  }
+
+  private static final List<ExclusionType> EXCLUSIONS =
+    List.of(
+      TrSchemaRevisionSetSQL::isCreateRoleExcluded,
+      TrSchemaRevisionSetSQL::isDropRoleExcluded,
+      TrSchemaRevisionSetSQL::isGrantExcluded,
+      TrSchemaRevisionSetSQL::isCreateFunctionExcluded,
+      TrSchemaRevisionSetSQL::isDropFunctionExcluded
+    );
+
   private static boolean exclude(
     final String statement,
     final EnumSet<TrStatementExclusion> exclusions)
   {
-    if (statement.startsWith("CREATE ROLE")) {
-      if (exclusions.contains(ROLES)) {
-        return true;
-      }
-    }
-    if (statement.startsWith("DROP ROLE")) {
-      if (exclusions.contains(ROLES)) {
-        return true;
-      }
-    }
-    if (statement.startsWith("GRANT")) {
-      if (exclusions.contains(GRANTS)) {
-        return true;
-      }
-    }
-    return false;
+    return EXCLUSIONS.stream()
+      .anyMatch(p -> p.isExcluded(exclusions, statement));
   }
 }
