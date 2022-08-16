@@ -39,5 +39,11 @@ public enum TrStatementExclusion
    * Exclude functions.
    */
 
-  FUNCTIONS
+  FUNCTIONS,
+
+  /**
+   * Exclude triggers.
+   */
+
+  TRIGGERS
 }
