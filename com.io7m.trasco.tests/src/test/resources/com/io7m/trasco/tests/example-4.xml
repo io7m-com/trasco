@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Schemas xmlns="urn:com.io7m.trasco.database.statements:1:0">
+  <Schema versionCurrent="0">
+    <Statement><![CDATA[
+create role egg
+]]>
+    </Statement>
+    <Statement><![CDATA[
+grant select, insert, update on something to egg
+]]>
+    </Statement>
+    <Statement><![CDATA[
+drop role egg
+]]>
+    </Statement>
+    <Statement><![CDATA[
+CREATE FUNCTION add(a integer, b integer) RETURNS integer
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN a + b;
+]]>
+    </Statement>
+    <Statement><![CDATA[
+DROP FUNCTION add(a integer, b integer);
+]]>
+    </Statement>
+    <Statement>
+      <![CDATA[
+create trigger email_check_delete_trigger
+  before delete on emails
+    for each row
+      execute function email_check_delete();
+]]>
+    </Statement>
+    <Statement>
+      <![CDATA[
+drop trigger email_check_delete_trigger;
+]]>
+    </Statement>
+  </Schema>
+</Schemas>

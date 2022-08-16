@@ -29,6 +29,7 @@ import java.util.Objects;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.FUNCTIONS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.GRANTS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.ROLES;
+import static com.io7m.trasco.vanilla.TrStatementExclusion.TRIGGERS;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -138,6 +139,22 @@ public final class TrSchemaRevisionSetSQL
            && exclusions.contains(FUNCTIONS);
   }
 
+  private static boolean isCreateTriggerExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("CREATE TRIGGER")
+           && exclusions.contains(TRIGGERS);
+  }
+
+  private static boolean isDropTriggerExcluded(
+    final EnumSet<TrStatementExclusion> exclusions,
+    final String statement)
+  {
+    return statement.startsWith("DROP TRIGGER")
+           && exclusions.contains(TRIGGERS);
+  }
+
   private interface ExclusionType
   {
     boolean isExcluded(
@@ -151,7 +168,9 @@ public final class TrSchemaRevisionSetSQL
       TrSchemaRevisionSetSQL::isDropRoleExcluded,
       TrSchemaRevisionSetSQL::isGrantExcluded,
       TrSchemaRevisionSetSQL::isCreateFunctionExcluded,
-      TrSchemaRevisionSetSQL::isDropFunctionExcluded
+      TrSchemaRevisionSetSQL::isDropFunctionExcluded,
+      TrSchemaRevisionSetSQL::isCreateTriggerExcluded,
+      TrSchemaRevisionSetSQL::isDropTriggerExcluded
     );
 
   private static boolean exclude(

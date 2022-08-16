@@ -31,7 +31,10 @@ import java.util.EnumSet;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.FUNCTIONS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.GRANTS;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.ROLES;
+import static com.io7m.trasco.vanilla.TrStatementExclusion.TRIGGERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class TrSchemeRevisionSetSQLTest
 {
@@ -115,6 +118,26 @@ public final class TrSchemeRevisionSetSQLTest
     assertEquals("grant select, insert, update on something to egg;", lines.get(1));
     assertEquals("drop role egg;", lines.get(2));
     assertEquals(3, lines.size());
+  }
+
+  @Test
+  public void testExcludeTriggers()
+    throws Exception
+  {
+    final var input =
+      this.resourceOf("example-4.xml");
+    final var output =
+      this.directory.resolve("out.sql");
+
+    TrSchemaRevisionSetSQL.showSQLStatements(
+      input,
+      output,
+      EnumSet.of(TRIGGERS)
+    );
+
+    final var lines = Files.lines(output).toList();
+    assertFalse(lines.stream().anyMatch(s -> s.toUpperCase().startsWith("CREATE TRIGGER")));
+    assertFalse(lines.stream().anyMatch(s -> s.toUpperCase().startsWith("DROP TRIGGER")));
   }
 
   @Test
