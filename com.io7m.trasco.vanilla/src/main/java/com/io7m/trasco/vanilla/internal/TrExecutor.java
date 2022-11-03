@@ -21,6 +21,7 @@ import com.io7m.trasco.api.TrEventUpgrading;
 import com.io7m.trasco.api.TrException;
 import com.io7m.trasco.api.TrExecutorConfiguration;
 import com.io7m.trasco.api.TrExecutorType;
+import com.io7m.trasco.api.TrExecutorUpgrade;
 import com.io7m.trasco.api.TrSchemaRevision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,16 +71,19 @@ public final class TrExecutor implements TrExecutorType
       throw new TrException(e.getMessage(), e, SQL_EXCEPTION);
     }
 
-    switch (this.configuration.upgrade()) {
-      case PERFORM_UPGRADES -> {
-        try {
-          this.executeUpgrades(existing);
-        } catch (final SQLException e) {
-          throw new TrException(e.getMessage(), e, SQL_EXCEPTION);
-        }
-      }
+    try {
+      this.executeUpgrades(existing);
+    } catch (final SQLException e) {
+      throw new TrException(e.getMessage(), e, SQL_EXCEPTION);
+    }
+  }
 
-      case FAIL_INSTEAD_OF_UPGRADING -> {
+  private void executeUpgrades(
+    final Optional<BigInteger> startVersion)
+    throws TrException, SQLException
+  {
+    if (startVersion.isEmpty()) {
+      if (this.configuration.upgrade() == TrExecutorUpgrade.FAIL_INSTEAD_OF_UPGRADING) {
         throw new TrException(
           new StringBuilder(128)
             .append("Incompatible database schema.")
@@ -91,14 +95,8 @@ public final class TrExecutor implements TrExecutorType
         );
       }
     }
-  }
 
-  private void executeUpgrades(
-    final Optional<BigInteger> startVersion)
-    throws TrException, SQLException
-  {
     final var connection = this.configuration.connection();
-
     connection.setAutoCommit(false);
 
     final var revisionsMap =
@@ -138,6 +136,25 @@ public final class TrExecutor implements TrExecutorType
           .toString(),
         UNRECOGNIZED_SCHEMA_REVISION
       );
+    }
+
+    if (!startVersion.equals(Optional.of(highestKnown))) {
+      if (this.configuration.upgrade() == TrExecutorUpgrade.FAIL_INSTEAD_OF_UPGRADING) {
+        throw new TrException(
+          new StringBuilder(128)
+            .append("Incompatible database schema.")
+            .append(System.lineSeparator())
+            .append("The schema version is ")
+            .append(startVersion.get())
+            .append(" but the highest schema we understand is ")
+            .append(highestKnown)
+            .append(", and upgrades are not permitted by the configuration (")
+            .append(this.configuration.upgrade())
+            .append(")")
+            .toString(),
+          UPGRADE_DISALLOWED
+        );
+      }
     }
 
     final var upgrades =
