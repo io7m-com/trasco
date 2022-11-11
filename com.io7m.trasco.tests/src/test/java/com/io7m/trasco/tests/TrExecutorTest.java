@@ -129,11 +129,50 @@ public final class TrExecutorTest
         },
         this::onEvent,
         new TrSchemaRevisionSet(new TreeMap<>()),
-        PERFORM_UPGRADES,
+        FAIL_INSTEAD_OF_UPGRADING,
         this.dataSource.getConnection()
       ));
 
-    executor.execute();
+    final var ex =
+      assertThrows(TrException.class, executor::execute);
+
+    assertEquals(UPGRADE_DISALLOWED, ex.errorCode());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * If the version number in the database isn't the highest known version,
+   * and the executor is configured not to perform upgrades, then execution
+   * fails.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testVersionNotHighest()
+    throws Exception
+  {
+    final TrSchemaRevisionSet revisions;
+    try (var stream = this.resourceOf("example-1.xml")) {
+      revisions = this.parsers.parse(URI.create("urn:stdin"), stream);
+    }
+
+    final var executor =
+      this.executors.create(new TrExecutorConfiguration(
+        connection -> Optional.of(BigInteger.ONE),
+        (version, connection) -> {
+          throw new IllegalStateException();
+        },
+        this::onEvent,
+        revisions,
+        FAIL_INSTEAD_OF_UPGRADING,
+        this.dataSource.getConnection()
+      ));
+
+    final var ex =
+      assertThrows(TrException.class, executor::execute);
+
+    assertEquals(UPGRADE_DISALLOWED, ex.errorCode());
     assertEquals(0, this.events.size());
   }
 
