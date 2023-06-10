@@ -16,7 +16,7 @@
 
 package com.io7m.trasco.vanilla;
 
-import com.io7m.anethum.common.ParseStatus;
+import com.io7m.anethum.api.ParseStatus;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserFactoryType;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserType;
 import com.io7m.trasco.vanilla.internal.TrSchemaSetRevisionParser;

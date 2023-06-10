@@ -17,7 +17,7 @@
 
 package com.io7m.trasco.vanilla;
 
-import com.io7m.anethum.common.ParseException;
+import com.io7m.anethum.api.ParsingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,14 +55,14 @@ public final class TrSchemaRevisionSetSQL
    * @param exclusions The excluded content
    *
    * @throws IOException    On errors
-   * @throws ParseException On errors
+   * @throws ParsingException On errors
    */
 
   public static void showSQLStatements(
     final Path input,
     final Path output,
     final EnumSet<TrStatementExclusion> exclusions)
-    throws IOException, ParseException
+    throws IOException, ParsingException
   {
     Objects.requireNonNull(input, "input");
     Objects.requireNonNull(output, "output");
