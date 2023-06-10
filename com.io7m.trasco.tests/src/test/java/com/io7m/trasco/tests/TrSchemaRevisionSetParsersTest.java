@@ -17,7 +17,7 @@
 
 package com.io7m.trasco.tests;
 
-import com.io7m.anethum.common.ParseException;
+import com.io7m.anethum.api.ParsingException;
 import com.io7m.trasco.api.TrSchemaRevision;
 import com.io7m.trasco.vanilla.TrSchemaRevisionSetParsers;
 import org.junit.jupiter.api.AfterEach;
@@ -153,7 +153,7 @@ public final class TrSchemaRevisionSetParsersTest
   {
     try (var stream = this.resourceOf(name)) {
       final var ex =
-        assertThrows(ParseException.class, () -> {
+        assertThrows(ParsingException.class, () -> {
           this.parsers.parse(URI.create("urn:stdin"), stream);
         });
     } catch (final IOException e) {

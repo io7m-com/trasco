@@ -17,9 +17,9 @@
 
 package com.io7m.trasco.vanilla.internal;
 
-import com.io7m.anethum.common.ParseException;
-import com.io7m.anethum.common.ParseSeverity;
-import com.io7m.anethum.common.ParseStatus;
+import com.io7m.anethum.api.ParseSeverity;
+import com.io7m.anethum.api.ParseStatus;
+import com.io7m.anethum.api.ParsingException;
 import com.io7m.blackthorne.api.BTException;
 import com.io7m.blackthorne.api.BTParseError;
 import com.io7m.blackthorne.api.BTParseErrorType.Severity;
@@ -32,6 +32,7 @@ import com.io7m.trasco.xml.schemas.TrSchemas;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -74,11 +75,9 @@ public final class TrSchemaSetRevisionParser
   private static ParseStatus mapParseError(
     final BTParseError error)
   {
-    return ParseStatus.builder()
-      .setLexical(error.lexical())
-      .setSeverity(mapSeverity(error.severity()))
-      .setErrorCode("parse-error")
-      .setMessage(error.message())
+    return ParseStatus.builder("parse-error", error.message())
+      .withSeverity(mapSeverity(error.severity()))
+      .withLexical(error.lexical())
       .build();
   }
 
@@ -93,7 +92,7 @@ public final class TrSchemaSetRevisionParser
 
   @Override
   public TrSchemaRevisionSet execute()
-    throws ParseException
+    throws ParsingException
   {
     try {
       final TrSchemaRevisionSet schemas =
@@ -121,7 +120,7 @@ public final class TrSchemaSetRevisionParser
         this.statusConsumer.accept(status);
       }
 
-      throw new ParseException(e.getMessage(), statuses);
+      throw new ParsingException(e.getMessage(), List.copyOf(statuses));
     }
   }
 
