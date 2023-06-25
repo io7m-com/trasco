@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <c:changelog project="com.io7m.trasco" xmlns:c="urn:com.io7m.changelog:4.0">
-  <c:releases/>
+  <c:releases>
+    <c:release date="2023-06-25T15:12:31+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="1.0.0">
+      <c:changes>
+        <c:change date="2023-06-25T00:00:00+00:00" summary="Initial major version."/>
+      </c:changes>
+    </c:release>
+  </c:releases>
   <c:ticket-systems>
     <c:ticket-system default="true" id="com.github.io7m.trasco" url="https://www.github.com/io7m/trasco/issues/"/>
   </c:ticket-systems>
