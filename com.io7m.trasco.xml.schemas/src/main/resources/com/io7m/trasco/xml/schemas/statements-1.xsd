@@ -16,6 +16,18 @@
     </xsd:simpleType>
   </xsd:element>
 
+  <xsd:element name="Text">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Text" element specifies the text of a parameterized SQL statement.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+  </xsd:element>
+
   <xsd:element name="Statement">
     <xsd:annotation>
       <xsd:documentation>
@@ -26,6 +38,130 @@
     <xsd:simpleType>
       <xsd:restriction base="xsd:string"/>
     </xsd:simpleType>
+  </xsd:element>
+
+  <xsd:element name="StatementParameterized">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "StatementParameterized" element specifies a single parameterized SQL statement.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="st:ParameterReferences"/>
+        <xsd:element ref="st:Text"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:simpleType name="ParameterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "ParameterType" type specifies the type of a given parameter.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="STRING"/>
+      <xsd:enumeration value="NUMERIC"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="Parameter">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Parameter" element specifies a parameter for an SQL schema.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:attribute name="name"
+                     type="xsd:string"
+                     use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            The name of the parameter.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+
+      <xsd:attribute name="type"
+                     type="st:ParameterType"
+                     use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            The type of the parameter.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="Parameters">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "Parameters" element specifies parameters for an SQL schema.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1"
+                    maxOccurs="unbounded">
+        <xsd:element ref="st:Parameter"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="ParameterReference">
+    <xsd:annotation>
+      <xsd:documentation>
+        A reference to a parameter.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:attribute name="order" type="xsd:unsignedInt" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            The order in which this parameter will be supplied to the SQL statement.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+
+      <xsd:attribute name="name" type="xsd:string" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            The name of the parameter.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="ParameterReferences">
+    <xsd:annotation>
+      <xsd:documentation>
+        A set of references to parameters.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1"
+                    maxOccurs="unbounded">
+        <xsd:element ref="st:ParameterReference"/>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:unique name="ParameterReferencesUniqueName">
+      <xsd:selector xpath="st:ParameterReference"/>
+      <xsd:field xpath="@name"/>
+    </xsd:unique>
+
+    <xsd:unique name="ParameterReferencesUniqueOrder">
+      <xsd:selector xpath="st:ParameterReference"/>
+      <xsd:field xpath="@order"/>
+    </xsd:unique>
   </xsd:element>
 
   <xsd:element name="Schema">
@@ -41,6 +177,7 @@
                     maxOccurs="unbounded">
         <xsd:choice minOccurs="1"
                     maxOccurs="1">
+          <xsd:element ref="st:StatementParameterized"/>
           <xsd:element ref="st:Statement"/>
           <xsd:element ref="st:Comment"/>
         </xsd:choice>
@@ -66,16 +203,33 @@
     </xsd:annotation>
 
     <xsd:complexType>
-      <xsd:sequence minOccurs="0"
-                    maxOccurs="unbounded">
-        <xsd:element ref="st:Schema"/>
+      <xsd:sequence>
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <xsd:element ref="st:Parameters"/>
+        </xsd:sequence>
+
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="unbounded">
+          <xsd:element ref="st:Schema"/>
+        </xsd:sequence>
       </xsd:sequence>
     </xsd:complexType>
 
     <xsd:key name="SchemaVersionKey">
-      <xsd:selector xpath="st:Schema|st:SchemaUpdate"/>
+      <xsd:selector xpath="st:Schema"/>
       <xsd:field xpath="@versionCurrent"/>
     </xsd:key>
+
+    <xsd:key name="ParameterNameKey">
+      <xsd:selector xpath="st:Parameters/st:Parameter"/>
+      <xsd:field xpath="@name"/>
+    </xsd:key>
+
+    <xsd:keyref name="ParameterReferencesRef"
+                refer="st:ParameterNameKey">
+      <xsd:selector xpath="st:Schema/st:StatementParameterized/st:ParameterReferences/st:ParameterReference"/>
+      <xsd:field xpath="@name"/>
+    </xsd:keyref>
   </xsd:element>
 
 </xsd:schema>

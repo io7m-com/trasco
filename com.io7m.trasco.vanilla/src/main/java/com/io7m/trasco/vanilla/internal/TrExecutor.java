@@ -16,6 +16,9 @@
 
 package com.io7m.trasco.vanilla.internal;
 
+import com.io7m.junreachable.UnimplementedCodeException;
+import com.io7m.trasco.api.TrArgumentNumeric;
+import com.io7m.trasco.api.TrArgumentString;
 import com.io7m.trasco.api.TrEventExecutingSQL;
 import com.io7m.trasco.api.TrEventUpgrading;
 import com.io7m.trasco.api.TrException;
@@ -23,17 +26,23 @@ import com.io7m.trasco.api.TrExecutorConfiguration;
 import com.io7m.trasco.api.TrExecutorType;
 import com.io7m.trasco.api.TrExecutorUpgrade;
 import com.io7m.trasco.api.TrSchemaRevision;
+import com.io7m.trasco.api.TrStatement;
+import com.io7m.trasco.api.TrStatementParameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import static com.io7m.trasco.api.TrErrorCode.SQL_EXCEPTION;
 import static com.io7m.trasco.api.TrErrorCode.UNRECOGNIZED_SCHEMA_REVISION;
 import static com.io7m.trasco.api.TrErrorCode.UPGRADE_DISALLOWED;
+import static java.util.Map.entry;
 
 /**
  * An executor.
@@ -63,6 +72,9 @@ public final class TrExecutor implements TrExecutorType
   public void execute()
     throws TrException
   {
+    this.configuration.arguments()
+      .checkSatisfies(this.configuration.revisions().parameters());
+
     final Optional<BigInteger> existing;
     try {
       existing = this.configuration.versionGet()
@@ -85,12 +97,10 @@ public final class TrExecutor implements TrExecutorType
     if (startVersion.isEmpty()) {
       if (this.configuration.upgrade() == TrExecutorUpgrade.FAIL_INSTEAD_OF_UPGRADING) {
         throw new TrException(
-          new StringBuilder(128)
-            .append("Incompatible database schema.")
-            .append(System.lineSeparator()).append(
-              "No schema version number was retrieved, and this executor was configured with ")
-            .append(this.configuration.upgrade())
-            .toString(),
+          "Incompatible database schema, and upgrades are not permitted by the configuration.",
+          Map.ofEntries(
+            entry("Configuration", this.configuration.upgrade().toString())
+          ),
           UPGRADE_DISALLOWED
         );
       }
@@ -124,16 +134,11 @@ public final class TrExecutor implements TrExecutorType
     final var highestKnown = revisionsMap.lastKey();
     if (versionHaveNow.compareTo(highestKnown) > 0) {
       throw new TrException(
-        new StringBuilder(128)
-          .append("Database schema version is too high!")
-          .append(System.lineSeparator())
-          .append("  Current version: ")
-          .append(versionHaveNow)
-          .append(System.lineSeparator())
-          .append("  Highest known version: ")
-          .append(highestKnown)
-          .append(System.lineSeparator())
-          .toString(),
+        "Database schema version is too high!",
+        Map.ofEntries(
+          entry("Current Version", versionHaveNow.toString()),
+          entry("Highest Known Version", highestKnown.toString())
+        ),
         UNRECOGNIZED_SCHEMA_REVISION
       );
     }
@@ -141,17 +146,12 @@ public final class TrExecutor implements TrExecutorType
     if (!startVersion.equals(Optional.of(highestKnown))) {
       if (this.configuration.upgrade() == TrExecutorUpgrade.FAIL_INSTEAD_OF_UPGRADING) {
         throw new TrException(
-          new StringBuilder(128)
-            .append("Incompatible database schema.")
-            .append(System.lineSeparator())
-            .append("The schema version is ")
-            .append(startVersion.get())
-            .append(" but the highest schema we understand is ")
-            .append(highestKnown)
-            .append(", and upgrades are not permitted by the configuration (")
-            .append(this.configuration.upgrade())
-            .append(")")
-            .toString(),
+          "Incompatible database schema, and upgrades are not permitted by the configuration.",
+          Map.ofEntries(
+            entry("Schema Version", startVersion.get().toString()),
+            entry("Highest Known Version", highestKnown.toString()),
+            entry("Configuration", this.configuration.upgrade().toString())
+          ),
           UPGRADE_DISALLOWED
         );
       }
@@ -185,16 +185,83 @@ public final class TrExecutor implements TrExecutorType
   {
     final var connection = this.configuration.connection();
 
-    for (final var statementText : revision.statements()) {
-      final var stripped = statementText.strip();
-      LOG.trace("execute: {}", stripped);
-
-      this.configuration.events()
-        .accept(new TrEventExecutingSQL(stripped));
-
-      try (var statement = connection.prepareStatement(stripped)) {
-        statement.execute();
+    for (final var statement : revision.statements()) {
+      if (statement instanceof final TrStatement st) {
+        this.executeStatement(connection, st);
+        continue;
       }
+      if (statement instanceof final TrStatementParameterized st) {
+        this.executeStatementParameterized(connection, st);
+        continue;
+      }
+    }
+  }
+
+  private void executeStatementParameterized(
+    final Connection connection,
+    final TrStatementParameterized st)
+    throws SQLException
+  {
+    final var stripped = st.text().strip();
+    LOG.trace("execute: {}", stripped);
+
+    this.configuration.events()
+      .accept(new TrEventExecutingSQL(stripped));
+
+    final var arguments =
+      this.configuration.arguments().arguments();
+    final var referencesInOrder =
+      st.references().inOrder();
+
+    try (var sql = connection.prepareStatement(stripped)) {
+
+      /*
+       * Set all of the required arguments.
+       */
+
+      for (final var order : referencesInOrder.keySet()) {
+        final var parameterRef =
+          referencesInOrder.get(order);
+        final var argument =
+          arguments.get(parameterRef.name());
+
+        final int paramIndex = order.intValue() + 1;
+        if (argument instanceof final TrArgumentString s) {
+          sql.setString(paramIndex, s.value());
+          continue;
+        }
+        if (argument instanceof final TrArgumentNumeric n) {
+          if (n.value() instanceof final Integer x) {
+            sql.setInt(paramIndex, x.intValue());
+          } else if (n.value() instanceof final Long x) {
+            sql.setLong(paramIndex, x.longValue());
+          } else if (n.value() instanceof final Double x) {
+            sql.setDouble(paramIndex, x.doubleValue());
+          } else if (n.value() instanceof final BigDecimal x) {
+            sql.setBigDecimal(paramIndex, x);
+          } else {
+            throw new UnimplementedCodeException();
+          }
+        }
+      }
+
+      sql.execute();
+    }
+  }
+
+  private void executeStatement(
+    final Connection connection,
+    final TrStatement st)
+    throws SQLException
+  {
+    final var stripped = st.text().strip();
+    LOG.trace("execute: {}", stripped);
+
+    this.configuration.events()
+      .accept(new TrEventExecutingSQL(stripped));
+
+    try (var sql = connection.prepareStatement(stripped)) {
+      sql.execute();
     }
   }
 }

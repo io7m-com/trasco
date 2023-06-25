@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Schemas xmlns="urn:com.io7m.trasco.database.statements:1:0">
+  <Parameters>
+    <Parameter name="role"
+               type="STRING"/>
+    <Parameter name="role"
+               type="STRING"/>
+  </Parameters>
+
+  <Schema versionCurrent="0">
+    <StatementParameterized>
+      <ParameterReferences>
+        <ParameterReference order="0" name="role"/>
+      </ParameterReferences>
+      <Text><![CDATA[
+create role egg
+]]></Text>
+    </StatementParameterized>
+  </Schema>
+
+</Schemas>

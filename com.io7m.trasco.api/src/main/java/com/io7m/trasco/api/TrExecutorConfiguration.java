@@ -27,6 +27,7 @@ import java.util.function.Consumer;
  * @param events     A function that will receive progress events
  * @param revisions  The set of known database schema revisions
  * @param upgrade    The desired upgrade behaviour
+ * @param arguments  The arguments provided to any required parameters
  * @param versionGet A function that will be executed to retrieve a schema
  *                   version number
  * @param versionSet A function that will be executed to set the schema version
@@ -39,6 +40,7 @@ public record TrExecutorConfiguration(
   Consumer<TrEventType> events,
   TrSchemaRevisionSet revisions,
   TrExecutorUpgrade upgrade,
+  TrArguments arguments,
   Connection connection)
 {
   /**
@@ -48,6 +50,7 @@ public record TrExecutorConfiguration(
    * @param events     A function that will receive progress events
    * @param revisions  The set of known database schema revisions
    * @param upgrade    The desired upgrade behaviour
+   * @param arguments  The arguments provided to any required parameters
    * @param versionGet A function that will be executed to retrieve a schema
    *                   version number
    * @param versionSet A function that will be executed to set the schema
@@ -62,5 +65,6 @@ public record TrExecutorConfiguration(
     Objects.requireNonNull(revisions, "revisions");
     Objects.requireNonNull(upgrade, "upgrade");
     Objects.requireNonNull(connection, "connection");
+    Objects.requireNonNull(arguments, "arguments");
   }
 }

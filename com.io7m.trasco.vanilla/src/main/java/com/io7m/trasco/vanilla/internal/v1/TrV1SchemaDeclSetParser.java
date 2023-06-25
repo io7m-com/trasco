@@ -20,10 +20,12 @@ import com.io7m.blackthorne.api.BTElementHandlerConstructorType;
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
 import com.io7m.blackthorne.api.BTQualifiedName;
+import com.io7m.trasco.api.TrParameter;
 import com.io7m.trasco.api.TrSchemaRevision;
 import com.io7m.trasco.api.TrSchemaRevisionSet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -37,9 +39,10 @@ import static java.util.function.Function.identity;
  */
 
 public final class TrV1SchemaDeclSetParser
-  implements BTElementHandlerType<TrSchemaRevision, TrSchemaRevisionSet>
+  implements BTElementHandlerType<Object, TrSchemaRevisionSet>
 {
   private final List<TrSchemaRevision> revisions;
+  private final HashMap<String, TrParameter> parameters;
 
   /**
    * A parser for database schemas.
@@ -51,20 +54,21 @@ public final class TrV1SchemaDeclSetParser
     final BTElementParsingContextType context)
   {
     this.revisions = new ArrayList<>();
+    this.parameters = new HashMap<>();
   }
 
   @Override
-  public Map<BTQualifiedName, BTElementHandlerConstructorType<?, ? extends TrSchemaRevision>>
+  public Map<BTQualifiedName, BTElementHandlerConstructorType<?, ?>>
   onChildHandlersRequested(
     final BTElementParsingContextType context)
   {
     return Map.ofEntries(
       Map.entry(
-        element("Schema"),
-        TrV1SchemaDeclParser::new
+        element("Parameters"),
+        TrV1ParametersDeclParser::new
       ),
       Map.entry(
-        element("SchemaUpdate"),
+        element("Schema"),
         TrV1SchemaDeclParser::new
       )
     );
@@ -73,9 +77,19 @@ public final class TrV1SchemaDeclSetParser
   @Override
   public void onChildValueProduced(
     final BTElementParsingContextType context,
-    final TrSchemaRevision result)
+    final Object result)
   {
-    this.revisions.add(result);
+    if (result instanceof final TrSchemaRevision revision) {
+      this.revisions.add(revision);
+      return;
+    }
+
+    if (result instanceof final Map<?, ?> map) {
+      this.parameters.putAll((Map<? extends String, ? extends TrParameter>) map);
+      return;
+    }
+
+    throw new IllegalArgumentException("Unexpected: %s".formatted(result));
   }
 
   @Override
@@ -85,6 +99,7 @@ public final class TrV1SchemaDeclSetParser
     this.revisions.sort(TrSchemaRevision::compareTo);
 
     return new TrSchemaRevisionSet(
+      Map.copyOf(this.parameters),
       new TreeMap<>(
         this.revisions.stream()
           .collect(Collectors.toMap(TrSchemaRevision::version, identity()))

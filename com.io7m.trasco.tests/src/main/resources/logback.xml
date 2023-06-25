@@ -14,7 +14,7 @@
           level="ERROR"/>
 
   <logger name="com.io7m.blackthorne"
-          level="ERROR"/>
+          level="TRACE"/>
 
   <logger name="com.io7m.jxe.core"
           level="ERROR"/>

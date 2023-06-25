@@ -216,6 +216,7 @@ try (var connection = dataSource.getConnection()) {
       event -> { },
       revisions,
       PERFORM_UPGRADES,
+      TrArguments.empty(),
       connection
     )
   ).execute();
@@ -233,4 +234,76 @@ if a target database is at the right version or not.
 If any part of the upgrade fails, the `TrExecutor` class raises an exception
 and the database will be left in its original state prior to _any_ revision
 upgrades.
+
+### Parameterized Statements
+
+Some statements may require the use of configurable parameters. For example,
+PostgreSQL's full text search feature requires indexes to be created with
+the name of the language used as a parameter (`'english'`, for example). Schemas
+can have typed, named parameters that are supplied with values at runtime:
+
+```
+<Schemas xmlns="urn:com.io7m.trasco.database.statements:1:0">
+  <Parameters>
+    <Parameter name="number0" type="NUMERIC"/>
+    <Parameter name="number1" type="NUMERIC"/>
+    <Parameter name="number2" type="NUMERIC"/>
+    <Parameter name="string0" type="STRING"/>
+    <Parameter name="number3" type="NUMERIC"/>
+  </Parameters>
+
+  <Schema versionCurrent="0">
+    <Statement><![CDATA[
+create table x (f0 integer, f1 bigint, f2 varchar(100), f3 double, f4 decimal)
+]]></Statement>
+
+    <StatementParameterized>
+      <ParameterReferences>
+        <ParameterReference order="0" name="number0"/>
+        <ParameterReference order="1" name="number1"/>
+        <ParameterReference order="2" name="string0"/>
+        <ParameterReference order="3" name="number2"/>
+        <ParameterReference order="4" name="number3"/>
+      </ParameterReferences>
+      <Text><![CDATA[
+insert into x values (?, ?, ?, ?, ?)
+]]></Text>
+    </StatementParameterized>
+  </Schema>
+</Schemas>
+```
+
+Parameters have a name and a type, and are scoped over all `Schema` declarations
+in the `Schemas` set. A `StatementParameterized` is an SQL statement that
+takes a list of parameter references. A `ParameterReference` refers to
+a parameter declared in the `Parameters` section, and has a defined `order`.
+
+In the example above, the value the programmer supplies to the `number0`
+parameter will be passed as the first parameter to the parameterized SQL
+statement.
+
+```
+new TrExecutors().create(
+  new TrExecutorConfiguration(
+    Example::schemaVersionGet,
+    Example::schemaVersionSet,
+    event -> { },
+    revisions,
+    PERFORM_UPGRADES,
+    new TrArguments(
+      Map.ofEntries(
+        Map.entry("number0", new TrArgumentNumeric("number0", 23)),
+        Map.entry("number1", new TrArgumentNumeric("number1", 23L)),
+        Map.entry("string0", new TrArgumentString("string0", "23")),
+        Map.entry("number2", new TrArgumentNumeric("number2", 23.0)),
+        Map.entry("number3", new TrArgumentNumeric("number3", BigDecimal.valueOf(23.0)))
+      )
+    ),
+    connection
+  )
+).execute();
+```
+
+Failing to provide parameters, or providing parameters of the wrong type,
+is an error.
 

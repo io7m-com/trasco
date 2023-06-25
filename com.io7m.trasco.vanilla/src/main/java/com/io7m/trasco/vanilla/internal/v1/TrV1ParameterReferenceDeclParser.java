@@ -18,43 +18,46 @@ package com.io7m.trasco.vanilla.internal.v1;
 
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
-import com.io7m.trasco.api.TrStatement;
+import com.io7m.trasco.api.TrParameterReference;
+import org.xml.sax.Attributes;
 
 /**
- * A statement parser.
+ * A V1 schema parser.
  */
 
-public final class TrV1StatementParser
-  implements BTElementHandlerType<Object, TrStatement>
+public final class TrV1ParameterReferenceDeclParser
+  implements BTElementHandlerType<Object, TrParameterReference>
 {
-  private final StringBuilder text;
+  private String name;
+  private int order;
 
   /**
-   * A statement parser.
+   * A V1 schema parser.
    *
-   * @param context The context
+   * @param context A context
    */
 
-  public TrV1StatementParser(
+  public TrV1ParameterReferenceDeclParser(
     final BTElementParsingContextType context)
   {
-    this.text = new StringBuilder(128);
+    this.name = "";
   }
 
   @Override
-  public void onCharacters(
+  public void onElementStart(
     final BTElementParsingContextType context,
-    final char[] data,
-    final int offset,
-    final int length)
+    final Attributes attributes)
   {
-    this.text.append(data, offset, length);
+    this.order =
+      Integer.parseUnsignedInt(attributes.getValue("order"));
+    this.name =
+      attributes.getValue("name");
   }
 
   @Override
-  public TrStatement onElementFinished(
+  public TrParameterReference onElementFinished(
     final BTElementParsingContextType context)
   {
-    return new TrStatement(this.text.toString().trim());
+    return new TrParameterReference(this.order, this.name);
   }
 }

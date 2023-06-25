@@ -20,16 +20,14 @@ import com.io7m.blackthorne.api.BTElementHandlerConstructorType;
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
 import com.io7m.blackthorne.api.BTQualifiedName;
-import com.io7m.trasco.api.TrSchemaRevision;
-import com.io7m.trasco.api.TrStatement;
-import com.io7m.trasco.api.TrStatementParameterized;
-import com.io7m.trasco.api.TrStatementType;
-import org.xml.sax.Attributes;
+import com.io7m.trasco.api.TrParameterReference;
+import com.io7m.trasco.api.TrParameterReferences;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static com.io7m.trasco.vanilla.internal.v1.TrV1.element;
 
@@ -37,11 +35,11 @@ import static com.io7m.trasco.vanilla.internal.v1.TrV1.element;
  * A V1 schema parser.
  */
 
-public final class TrV1SchemaDeclParser
-  implements BTElementHandlerType<Object, TrSchemaRevision>
+public final class TrV1ParameterReferencesDeclParser
+  implements BTElementHandlerType<TrParameterReference, TrParameterReferences>
 {
-  private final ArrayList<TrStatementType> statements;
-  private BigInteger versionCurrent;
+  private final SortedMap<Integer, TrParameterReference> inOrder;
+  private final Map<String, TrParameterReference> byName;
 
   /**
    * A V1 schema parser.
@@ -49,71 +47,42 @@ public final class TrV1SchemaDeclParser
    * @param context A context
    */
 
-  public TrV1SchemaDeclParser(
+  public TrV1ParameterReferencesDeclParser(
     final BTElementParsingContextType context)
   {
-    this.statements = new ArrayList<>();
+    this.inOrder = new TreeMap<>();
+    this.byName = new HashMap<>();
   }
 
   @Override
-  public Map<BTQualifiedName, BTElementHandlerConstructorType<?, ?>>
+  public Map<BTQualifiedName, BTElementHandlerConstructorType<?, ? extends TrParameterReference>>
   onChildHandlersRequested(
     final BTElementParsingContextType context)
   {
     return Map.ofEntries(
       Map.entry(
-        element("StatementParameterized"),
-        TrV1StatementParameterizedParser::new
-      ),
-      Map.entry(
-        element("Statement"),
-        TrV1StatementParser::new
-      ),
-      Map.entry(
-        element("Comment"),
-        TrV1CommentParser::new
+        element("ParameterReference"),
+        TrV1ParameterReferenceDeclParser::new
       )
     );
   }
 
   @Override
-  public void onElementStart(
-    final BTElementParsingContextType context,
-    final Attributes attributes)
-  {
-    this.versionCurrent =
-      new BigInteger(attributes.getValue("versionCurrent"));
-  }
-
-  @Override
   public void onChildValueProduced(
     final BTElementParsingContextType context,
-    final Object result)
+    final TrParameterReference result)
   {
-    if (result instanceof final TrStatement st) {
-      this.statements.add(st);
-      return;
-    }
-
-    if (result instanceof final TrStatementParameterized st) {
-      this.statements.add(st);
-      return;
-    }
-
-    if (result instanceof TrV1Comment) {
-      return;
-    }
-
-    throw new IllegalArgumentException("Unexpected: %s".formatted(result));
+    this.inOrder.put(Integer.valueOf(result.order()), result);
+    this.byName.put(result.name(), result);
   }
 
   @Override
-  public TrSchemaRevision onElementFinished(
+  public TrParameterReferences onElementFinished(
     final BTElementParsingContextType context)
   {
-    return new TrSchemaRevision(
-      this.versionCurrent,
-      List.copyOf(this.statements)
+    return new TrParameterReferences(
+      Collections.unmodifiableSortedMap(this.inOrder),
+      Map.copyOf(this.byName)
     );
   }
 }

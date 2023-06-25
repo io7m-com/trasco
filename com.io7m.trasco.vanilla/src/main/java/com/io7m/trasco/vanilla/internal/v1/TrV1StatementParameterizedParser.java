@@ -20,39 +20,35 @@ import com.io7m.blackthorne.api.BTElementHandlerConstructorType;
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
 import com.io7m.blackthorne.api.BTQualifiedName;
-import com.io7m.trasco.api.TrSchemaRevision;
+import com.io7m.trasco.api.TrParameterReferences;
 import com.io7m.trasco.api.TrStatement;
 import com.io7m.trasco.api.TrStatementParameterized;
-import com.io7m.trasco.api.TrStatementType;
-import org.xml.sax.Attributes;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.io7m.trasco.vanilla.internal.v1.TrV1.element;
 
 /**
- * A V1 schema parser.
+ * A parameterized statement parser.
  */
 
-public final class TrV1SchemaDeclParser
-  implements BTElementHandlerType<Object, TrSchemaRevision>
+public final class TrV1StatementParameterizedParser
+  implements BTElementHandlerType<Object, TrStatementParameterized>
 {
-  private final ArrayList<TrStatementType> statements;
-  private BigInteger versionCurrent;
+  private final StringBuilder text;
+  private TrParameterReferences parameters;
 
   /**
-   * A V1 schema parser.
+   * A statement parser.
    *
-   * @param context A context
+   * @param context The context
    */
 
-  public TrV1SchemaDeclParser(
+  public TrV1StatementParameterizedParser(
     final BTElementParsingContextType context)
   {
-    this.statements = new ArrayList<>();
+    this.parameters = TrParameterReferences.of();
+    this.text = new StringBuilder(128);
   }
 
   @Override
@@ -62,27 +58,14 @@ public final class TrV1SchemaDeclParser
   {
     return Map.ofEntries(
       Map.entry(
-        element("StatementParameterized"),
-        TrV1StatementParameterizedParser::new
+        element("ParameterReferences"),
+        TrV1ParameterReferencesDeclParser::new
       ),
       Map.entry(
-        element("Statement"),
+        element("Text"),
         TrV1StatementParser::new
-      ),
-      Map.entry(
-        element("Comment"),
-        TrV1CommentParser::new
       )
     );
-  }
-
-  @Override
-  public void onElementStart(
-    final BTElementParsingContextType context,
-    final Attributes attributes)
-  {
-    this.versionCurrent =
-      new BigInteger(attributes.getValue("versionCurrent"));
   }
 
   @Override
@@ -91,16 +74,11 @@ public final class TrV1SchemaDeclParser
     final Object result)
   {
     if (result instanceof final TrStatement st) {
-      this.statements.add(st);
+      this.text.append(st.text());
       return;
     }
-
-    if (result instanceof final TrStatementParameterized st) {
-      this.statements.add(st);
-      return;
-    }
-
-    if (result instanceof TrV1Comment) {
+    if (result instanceof final TrParameterReferences refs) {
+      this.parameters = refs;
       return;
     }
 
@@ -108,12 +86,12 @@ public final class TrV1SchemaDeclParser
   }
 
   @Override
-  public TrSchemaRevision onElementFinished(
+  public TrStatementParameterized onElementFinished(
     final BTElementParsingContextType context)
   {
-    return new TrSchemaRevision(
-      this.versionCurrent,
-      List.copyOf(this.statements)
+    return new TrStatementParameterized(
+      this.parameters,
+      this.text.toString().trim()
     );
   }
 }

@@ -18,7 +18,11 @@
 package com.io7m.trasco.tests;
 
 import com.io7m.anethum.api.ParsingException;
+import com.io7m.trasco.api.TrParameterReference;
+import com.io7m.trasco.api.TrParameterReferences;
 import com.io7m.trasco.api.TrSchemaRevision;
+import com.io7m.trasco.api.TrStatement;
+import com.io7m.trasco.api.TrStatementParameterized;
 import com.io7m.trasco.vanilla.TrSchemaRevisionSetParsers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +37,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
@@ -85,6 +90,7 @@ public final class TrSchemaRevisionSetParsersTest
         new TrSchemaRevision(
           BigInteger.ZERO,
           List.of(
+            new TrStatement(
             """
               create table schema_version (
                 version_lock   char(1) not null default 'X',
@@ -93,40 +99,41 @@ public final class TrSchemaRevisionSetParsersTest
                 constraint check_lock_primary primary key (version_lock),
                 constraint check_lock_locked check (version_lock = 'X')
               )
-                            """.trim()
+                            """.trim())
           )
         );
 
       final var rev1 =
         new TrSchemaRevision(
           BigInteger.ONE,
-          List.of(
+          List.of(new TrStatement(
             """
               create table example0 (
                 user_id char(16) for bit data not null primary key
               )
                             """.trim()
-          )
+          ))
         );
 
       final var rev2 =
         new TrSchemaRevision(
           BigInteger.TWO,
-          List.of(
+
+          List.of(new TrStatement(
             """
               alter table example0 add col1 integer
                             """.trim()
-          )
+          ))
         );
 
       final var rev3 =
         new TrSchemaRevision(
           new BigInteger("3"),
-          List.of(
+          List.of(new TrStatement(
             """
               alter table example0 add col2 integer
                             """.trim()
-          )
+          ))
         );
 
       final var expected = new TreeMap<>();
@@ -139,13 +146,56 @@ public final class TrSchemaRevisionSetParsersTest
     }
   }
 
+  @Test
+  public void testExample5()
+    throws Exception
+  {
+    try (var stream = this.resourceOf("example-5.xml")) {
+      final var set =
+        this.parsers.parse(URI.create("urn:stdin"), stream);
+
+      final var rev0 =
+        new TrSchemaRevision(
+          BigInteger.ZERO,
+          List.of(
+            new TrStatement("""
+create table x (f0 integer, f1 bigint, f2 varchar(100), f3 double, f4 decimal)
+""".trim()),
+            new TrStatementParameterized(
+              TrParameterReferences.of(
+                new TrParameterReference(0, "number0"),
+                new TrParameterReference(1, "number1"),
+                new TrParameterReference(2, "string0"),
+                new TrParameterReference(3, "number2"),
+                new TrParameterReference(4, "number3")
+              ),
+              """
+insert into x values (?, ?, ?, ?, ?)
+                              """.trim())
+          )
+        );
+
+      final var expected = new TreeMap<>();
+      expected.put(rev0.version(), rev0);
+
+      assertEquals(expected, set.revisions());
+    }
+  }
+
   @TestFactory
   public Stream<DynamicTest> testErrors()
   {
-    return Stream.of("error-0.xml", "error-1.xml", "error-2.xml")
-      .map(name -> DynamicTest.dynamicTest(
-        "testError_" + name,
-        () -> this.testError(name)));
+    return Stream.of(
+      "error-0.xml",
+      "error-1.xml",
+      "error-2.xml",
+      "error-3.xml",
+      "error-4.xml")
+      .map(name -> {
+        return DynamicTest.dynamicTest(
+          "testError_" + name,
+          () -> this.testError(name));
+      });
   }
 
   private void testError(

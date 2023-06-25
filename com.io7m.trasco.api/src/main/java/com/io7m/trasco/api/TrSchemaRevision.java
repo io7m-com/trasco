@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public record TrSchemaRevision(
   BigInteger version,
-  List<String> statements)
+  List<TrStatementType> statements)
   implements Comparable<TrSchemaRevision>
 {
   /**

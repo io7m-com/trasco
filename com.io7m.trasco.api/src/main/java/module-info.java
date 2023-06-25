@@ -23,8 +23,9 @@ module com.io7m.trasco.api
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
-  requires transitive java.sql;
   requires transitive com.io7m.anethum.api;
+  requires transitive com.io7m.seltzer.api;
+  requires transitive java.sql;
 
   exports com.io7m.trasco.api;
 }
