@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.trasco</artifactId>
     <groupId>com.io7m.trasco</groupId>
-    <version>1.0.0-beta0001</version>
+    <version>1.0.0-beta0002</version>
   </parent>
 
   <artifactId>com.io7m.trasco.api</artifactId>
@@ -30,6 +30,10 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.io7m.seltzer</groupId>
+      <artifactId>com.io7m.seltzer.api</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.io7m.anethum</groupId>
       <artifactId>com.io7m.anethum.api</artifactId>

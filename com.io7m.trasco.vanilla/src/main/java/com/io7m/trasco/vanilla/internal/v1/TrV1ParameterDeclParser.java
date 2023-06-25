@@ -18,43 +18,47 @@ package com.io7m.trasco.vanilla.internal.v1;
 
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
-import com.io7m.trasco.api.TrStatement;
+import com.io7m.trasco.api.TrParameter;
+import com.io7m.trasco.api.TrParameterKind;
+import org.xml.sax.Attributes;
 
 /**
- * A statement parser.
+ * A V1 schema parser.
  */
 
-public final class TrV1StatementParser
-  implements BTElementHandlerType<Object, TrStatement>
+public final class TrV1ParameterDeclParser
+  implements BTElementHandlerType<Object, TrParameter>
 {
-  private final StringBuilder text;
+  private String name;
+  private TrParameterKind type;
 
   /**
-   * A statement parser.
+   * A V1 schema parser.
    *
-   * @param context The context
+   * @param context A context
    */
 
-  public TrV1StatementParser(
+  public TrV1ParameterDeclParser(
     final BTElementParsingContextType context)
   {
-    this.text = new StringBuilder(128);
+
   }
 
   @Override
-  public void onCharacters(
+  public void onElementStart(
     final BTElementParsingContextType context,
-    final char[] data,
-    final int offset,
-    final int length)
+    final Attributes attributes)
   {
-    this.text.append(data, offset, length);
+    this.name =
+      attributes.getValue("name");
+    this.type =
+      TrParameterKind.valueOf(attributes.getValue("type"));
   }
 
   @Override
-  public TrStatement onElementFinished(
+  public TrParameter onElementFinished(
     final BTElementParsingContextType context)
   {
-    return new TrStatement(this.text.toString().trim());
+    return new TrParameter(this.name, this.type);
   }
 }

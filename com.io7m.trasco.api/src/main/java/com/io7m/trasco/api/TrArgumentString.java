@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,45 +17,36 @@
 
 package com.io7m.trasco.api;
 
+import java.util.Objects;
+
 /**
- * The error codes currently returned by the API.
+ * The type of string arguments.
+ *
+ * @param name  The name
+ * @param value The value
  */
 
-public enum TrErrorCode
+public record TrArgumentString(
+  String name,
+  String value)
+  implements TrArgumentType
 {
   /**
-   * An underlying SQL database exception caused the operation to fail.
+   * The type of string arguments.
+   *
+   * @param name  The name
+   * @param value The value
    */
 
-  SQL_EXCEPTION,
+  public TrArgumentString
+  {
+    Objects.requireNonNull(name, "name");
+    Objects.requireNonNull(value, "value");
+  }
 
-  /**
-   * An upgrade was required, but disallowed.
-   */
-
-  UPGRADE_DISALLOWED,
-
-  /**
-   * The database has a schema version that is unrecognized.
-   */
-
-  UNRECOGNIZED_SCHEMA_REVISION,
-
-  /**
-   * A required argument was not provided.
-   */
-
-  ARGUMENT_MISSING,
-
-  /**
-   * An argument of the wrong type was provided.
-   */
-
-  ARGUMENT_TYPE_ERROR,
-
-  /**
-   * One or more argument errors were encountered.
-   */
-
-  ARGUMENT_ERRORS
+  @Override
+  public TrParameterKind type()
+  {
+    return TrParameterKind.STRING;
+  }
 }

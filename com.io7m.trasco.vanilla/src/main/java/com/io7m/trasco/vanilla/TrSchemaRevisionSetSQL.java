@@ -88,10 +88,10 @@ public final class TrSchemaRevisionSetSQL
       for (final var entry : set.revisions().entrySet()) {
         final var revision = entry.getValue();
         for (final var statement : revision.statements()) {
-          if (exclude(statement.strip().toUpperCase(ROOT), exclusions)) {
+          if (exclude(statement.text().strip().toUpperCase(ROOT), exclusions)) {
             continue;
           }
-          writer.append(statement);
+          writer.append(statement.text());
           writer.append(';');
           writer.newLine();
         }

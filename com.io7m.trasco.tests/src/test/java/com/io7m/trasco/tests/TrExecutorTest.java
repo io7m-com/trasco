@@ -16,6 +16,9 @@
 
 package com.io7m.trasco.tests;
 
+import com.io7m.trasco.api.TrArgumentNumeric;
+import com.io7m.trasco.api.TrArgumentString;
+import com.io7m.trasco.api.TrArguments;
 import com.io7m.trasco.api.TrEventExecutingSQL;
 import com.io7m.trasco.api.TrEventType;
 import com.io7m.trasco.api.TrEventUpgrading;
@@ -31,10 +34,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
@@ -42,6 +47,7 @@ import static com.io7m.trasco.api.TrErrorCode.UNRECOGNIZED_SCHEMA_REVISION;
 import static com.io7m.trasco.api.TrErrorCode.UPGRADE_DISALLOWED;
 import static com.io7m.trasco.api.TrExecutorUpgrade.FAIL_INSTEAD_OF_UPGRADING;
 import static com.io7m.trasco.api.TrExecutorUpgrade.PERFORM_UPGRADES;
+import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -98,8 +104,9 @@ public final class TrExecutorTest
           throw new IllegalStateException();
         },
         this::onEvent,
-        new TrSchemaRevisionSet(new TreeMap<>()),
+        new TrSchemaRevisionSet(Map.of(), new TreeMap<>()),
         FAIL_INSTEAD_OF_UPGRADING,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -128,8 +135,9 @@ public final class TrExecutorTest
           throw new IllegalStateException();
         },
         this::onEvent,
-        new TrSchemaRevisionSet(new TreeMap<>()),
+        new TrSchemaRevisionSet(Map.of(), new TreeMap<>()),
         FAIL_INSTEAD_OF_UPGRADING,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -166,6 +174,7 @@ public final class TrExecutorTest
         this::onEvent,
         revisions,
         FAIL_INSTEAD_OF_UPGRADING,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -203,6 +212,7 @@ public final class TrExecutorTest
         this::onEvent,
         revisions,
         PERFORM_UPGRADES,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -239,6 +249,7 @@ public final class TrExecutorTest
         this::onEvent,
         revisions,
         PERFORM_UPGRADES,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -323,6 +334,7 @@ public final class TrExecutorTest
         this::onEvent,
         revisions,
         PERFORM_UPGRADES,
+        TrArguments.empty(),
         this.dataSource.getConnection()
       ));
 
@@ -343,6 +355,64 @@ public final class TrExecutorTest
         new BigInteger("2"),
         new BigInteger("3")),
       this.events.remove()
+    );
+    assertEquals(
+      TrEventExecutingSQL.class,
+      this.events.remove().getClass()
+    );
+
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Upgrading from an uninitialized database works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testUpgradeFullOKParameterized()
+    throws Exception
+  {
+    final TrSchemaRevisionSet revisions;
+    try (var stream = this.resourceOf("example-5.xml")) {
+      revisions = this.parsers.parse(URI.create("urn:stdin"), stream);
+    }
+
+    final var executor =
+      this.executors.create(new TrExecutorConfiguration(
+        connection -> {
+          return Optional.empty();
+        },
+        (version, connection) -> {
+
+        },
+        this::onEvent,
+        revisions,
+        PERFORM_UPGRADES,
+        new TrArguments(
+          Map.ofEntries(
+            entry("number0", new TrArgumentNumeric("number0", 23)),
+            entry("number1", new TrArgumentNumeric("number1", 23L)),
+            entry("string0", new TrArgumentString("string0", "23")),
+            entry("number2", new TrArgumentNumeric("number2", 23.0)),
+            entry("number3", new TrArgumentNumeric("number3", BigDecimal.valueOf(23.0)))
+          )
+        ),
+        this.dataSource.getConnection()
+      ));
+
+    executor.execute();
+
+    assertEquals(
+      new TrEventUpgrading(
+        new BigInteger("-1"),
+        new BigInteger("0")),
+      this.events.remove()
+    );
+    assertEquals(
+      TrEventExecutingSQL.class,
+      this.events.remove().getClass()
     );
     assertEquals(
       TrEventExecutingSQL.class,

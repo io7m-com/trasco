@@ -17,26 +17,31 @@
 package com.io7m.trasco.api;
 
 import java.math.BigInteger;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
 
 /**
  * A set of schema revisions.
  *
- * @param revisions The revisions
+ * @param parameters The parameters
+ * @param revisions  The revisions
  */
 
 public record TrSchemaRevisionSet(
+  Map<String, TrParameter> parameters,
   NavigableMap<BigInteger, TrSchemaRevision> revisions)
 {
   /**
    * A set of schema revisions.
    *
-   * @param revisions The revisions
+   * @param parameters The parameters
+   * @param revisions  The revisions
    */
 
   public TrSchemaRevisionSet
   {
+    Objects.requireNonNull(parameters, "parameters");
     Objects.requireNonNull(revisions, "revisions");
 
     if (revisions.size() >= 2) {
@@ -53,6 +58,25 @@ public record TrSchemaRevisionSet(
           }
         }
         previous = current;
+      }
+    }
+
+    for (final var revision : revisions.values()) {
+      for (final var statement : revision.statements()) {
+        if (statement instanceof final TrStatementParameterized parameterized) {
+          final var values =
+            parameterized.references().byName().values();
+          for (final var parameter : values) {
+            if (!parameters.containsKey(parameter.name())) {
+              throw new IllegalArgumentException(
+                String.format(
+                  "Revision %s specifies a reference to a nonexistent parameter %s",
+                  revision.version(),
+                  parameter
+                ));
+            }
+          }
+        }
       }
     }
   }
