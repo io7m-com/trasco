@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Schemas xmlns="urn:com.io7m.trasco.database.statements:1:0">
+  <Parameters>
+    <Parameter name="number0"
+               type="NUMERIC"/>
+    <Parameter name="number1"
+               type="NUMERIC"/>
+    <Parameter name="number2"
+               type="NUMERIC"/>
+    <Parameter name="string0"
+               type="STRING"/>
+    <Parameter name="number3"
+               type="NUMERIC"/>
+  </Parameters>
+
+  <Schema versionCurrent="0">
+    <Statement><![CDATA[
+create table x (f0 integer, f1 bigint, f2 varchar(100), f3 double, f4 decimal)
+]]></Statement>
+
+    <StatementParameterized parameterInterpolation="STRING_FORMATTING">
+      <ParameterReferences>
+        <ParameterReference order="0"
+                            name="number0"/>
+        <ParameterReference order="1"
+                            name="number1"/>
+        <ParameterReference order="2"
+                            name="string0"/>
+        <ParameterReference order="3"
+                            name="number2"/>
+        <ParameterReference order="4"
+                            name="number3"/>
+      </ParameterReferences>
+      <Text><![CDATA[
+insert into x values (%s, %s, %s, %s, %s)
+]]></Text>
+    </StatementParameterized>
+  </Schema>
+
+</Schemas>

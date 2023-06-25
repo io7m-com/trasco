@@ -164,24 +164,9 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.bundle</artifactId>
-        <version>2.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.versioning</artifactId>
-        <version>1.1.2</version>
+        <groupId>com.io7m.junreachable</groupId>
+        <artifactId>com.io7m.junreachable.core</artifactId>
+        <version>4.0.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -203,16 +188,20 @@
         <artifactId>jgrapht-core</artifactId>
         <version>1.5.2</version>
       </dependency>
+
+      <!-- Build metadata -->
       <dependency>
-        <groupId>net.jqwik</groupId>
-        <artifactId>jqwik-engine</artifactId>
-        <version>${jqwik.version}</version>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
+        <version>2.0.0</version>
       </dependency>
       <dependency>
-        <groupId>net.jqwik</groupId>
-        <artifactId>jqwik-api</artifactId>
-        <version>${jqwik.version}</version>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>1.1.2</version>
       </dependency>
+
+      <!-- Test suite -->
       <dependency>
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
@@ -234,9 +223,24 @@
         <version>${derby.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.io7m.junreachable</groupId>
-        <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>4.0.0</version>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-engine</artifactId>
+        <version>${jqwik.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-api</artifactId>
+        <version>${jqwik.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

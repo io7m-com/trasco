@@ -22,25 +22,29 @@ import java.util.Objects;
 /**
  * A statement with parameters.
  *
- * @param text       The text
- * @param references The references
+ * @param text          The text
+ * @param references    The references
+ * @param interpolation The type of parameter interpolation to use
  */
 
 public record TrStatementParameterized(
   TrParameterReferences references,
-  String text)
+  String text,
+  TrParameterInterpolation interpolation)
   implements TrStatementType
 {
   /**
    * A statement with parameters.
    *
-   * @param text       The text
-   * @param references The references
+   * @param text          The text
+   * @param references    The references
+   * @param interpolation The type of parameter interpolation to use
    */
 
   public TrStatementParameterized
   {
     Objects.requireNonNull(references, "references");
     Objects.requireNonNull(text, "text");
+    Objects.requireNonNull(interpolation, "interpolation");
   }
 }

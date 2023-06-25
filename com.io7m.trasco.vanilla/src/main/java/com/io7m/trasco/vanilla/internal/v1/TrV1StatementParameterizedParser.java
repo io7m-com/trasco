@@ -20,11 +20,14 @@ import com.io7m.blackthorne.api.BTElementHandlerConstructorType;
 import com.io7m.blackthorne.api.BTElementHandlerType;
 import com.io7m.blackthorne.api.BTElementParsingContextType;
 import com.io7m.blackthorne.api.BTQualifiedName;
+import com.io7m.trasco.api.TrParameterInterpolation;
 import com.io7m.trasco.api.TrParameterReferences;
 import com.io7m.trasco.api.TrStatement;
 import com.io7m.trasco.api.TrStatementParameterized;
+import org.xml.sax.Attributes;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static com.io7m.trasco.vanilla.internal.v1.TrV1.element;
 
@@ -37,6 +40,7 @@ public final class TrV1StatementParameterizedParser
 {
   private final StringBuilder text;
   private TrParameterReferences parameters;
+  private TrParameterInterpolation interpolation;
 
   /**
    * A statement parser.
@@ -69,6 +73,20 @@ public final class TrV1StatementParameterizedParser
   }
 
   @Override
+  public void onElementStart(
+    final BTElementParsingContextType context,
+    final Attributes attributes)
+  {
+    this.interpolation =
+      TrParameterInterpolation.valueOf(
+        Objects.requireNonNullElse(
+          attributes.getValue("parameterInterpolation"),
+          TrParameterInterpolation.PREPARED_STATEMENT.name()
+        )
+      );
+  }
+
+  @Override
   public void onChildValueProduced(
     final BTElementParsingContextType context,
     final Object result)
@@ -91,7 +109,8 @@ public final class TrV1StatementParameterizedParser
   {
     return new TrStatementParameterized(
       this.parameters,
-      this.text.toString().trim()
+      this.text.toString().trim(),
+      this.interpolation
     );
   }
 }

@@ -422,6 +422,66 @@ public final class TrExecutorTest
     assertEquals(0, this.events.size());
   }
 
+  /**
+   * Upgrading from an uninitialized database works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testUpgradeFullOKParameterizedFormatted()
+    throws Exception
+  {
+    final TrSchemaRevisionSet revisions;
+    try (var stream = this.resourceOf("example-6.xml")) {
+      revisions = this.parsers.parse(URI.create("urn:stdin"), stream);
+    }
+
+    final var executor =
+      this.executors.create(new TrExecutorConfiguration(
+        connection -> {
+          return Optional.empty();
+        },
+        (version, connection) -> {
+
+        },
+        this::onEvent,
+        revisions,
+        PERFORM_UPGRADES,
+        new TrArguments(
+          Map.ofEntries(
+            entry("number0", new TrArgumentNumeric("number0", 23)),
+            entry("number1", new TrArgumentNumeric("number1", 23L)),
+            entry("string0", new TrArgumentString("string0", "\"23")),
+            entry("number2", new TrArgumentNumeric("number2", 23.0)),
+            entry("number3", new TrArgumentNumeric("number3", BigDecimal.valueOf(23.0)))
+          )
+        ),
+        this.dataSource.getConnection()
+      ));
+
+    executor.execute();
+
+    assertEquals(
+      new TrEventUpgrading(
+        new BigInteger("-1"),
+        new BigInteger("0")),
+      this.events.remove()
+    );
+    assertEquals(
+      TrEventExecutingSQL.class,
+      this.events.remove().getClass()
+    );
+
+    final var statement = (TrEventExecutingSQL) this.events.remove();
+    assertEquals(
+      "insert into x values (23, 23, '\\\"23', 23.0, 23.0)",
+      statement.statement()
+    );
+
+    assertEquals(0, this.events.size());
+  }
+
   private InputStream resourceOf(
     final String name)
     throws IOException

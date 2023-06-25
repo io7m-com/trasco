@@ -291,3 +291,44 @@ new TrExecutors().create(
 
 Failing to provide parameters, or providing parameters of the wrong type,
 is an error.
+
+#### Parameter Interpolation
+
+By default, `trasco` uses prepared statements to execute schema statements.
+For some kinds of statements, on some databases, this will cause problems.
+For example, some kinds of DDL statements on PostgreSQL (such as `CREATE INDEX`)
+cannot have parameters bound using JDBC. For example:
+
+```
+try (var st = connection.prepareStatement("CREATE INDEX ? ON t (c)")) {
+  st.setString(1, "index_name");
+  st.execute();
+}
+```
+
+The above code will fail with an error similar to `ERROR: there is no parameter $1`.
+Unfortunately, to deal with this kind of statement, it is necessary to manually
+build an SQL statement. The `trasco` package offers a `STRING_FORMATTING`
+interpolation mode that safely builds query strings with the proper escapes.
+Specify an `interpolation` attribute with a value of `STRING_FORMATTING`
+for a particular parameterized statement, and use `%s` format string
+parameters instead of the standard `?` JDBC parameters:
+
+```
+<StatementParameterized parameterInterpolation="STRING_FORMATTING">
+  <ParameterReferences>
+    <ParameterReference order="0" name="number0"/>
+    <ParameterReference order="1" name="number1"/>
+    <ParameterReference order="2" name="string0"/>
+    <ParameterReference order="3" name="number2"/>
+    <ParameterReference order="4" name="number3"/>
+  </ParameterReferences>
+  <Text><![CDATA[
+insert into x values (%s, %s, %s, %s, %s)
+]]></Text>
+</StatementParameterized>
+```
+
+The statement will be interpolated manually using `String.format()` and
+the Apache Commons Text string escape functions to safely escape characters
+in strings. The resulting text will be passed to JDBC directly.

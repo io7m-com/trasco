@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,26 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
+package com.io7m.trasco.api;
+
 /**
- * SQL revision system (Vanilla implementation)
+ * A specification of how parameters should be interpolated for a statement.
  */
 
-module com.io7m.trasco.vanilla
+public enum TrParameterInterpolation
 {
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+  /**
+   * A prepared statement should be used, and parameters should be bound
+   * to the JDBC prepared statement.
+   */
 
-  requires transitive com.io7m.trasco.api;
+  PREPARED_STATEMENT,
 
-  requires com.io7m.trasco.xml.schemas;
+  /**
+   * Manual variable interpolation is performed using String.format(),
+   * and the resulting string constant is passed to JDBC.
+   */
 
-  requires org.apache.commons.text;
-  requires com.io7m.anethum.api;
-  requires com.io7m.blackthorne.api;
-  requires com.io7m.blackthorne.jxe;
-  requires com.io7m.junreachable.core;
-  requires com.io7m.jxe.core;
-  requires org.slf4j;
-
-  exports com.io7m.trasco.vanilla;
+  STRING_FORMATTING
 }

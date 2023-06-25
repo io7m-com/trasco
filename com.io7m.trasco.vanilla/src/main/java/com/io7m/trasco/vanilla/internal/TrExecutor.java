@@ -17,6 +17,7 @@
 package com.io7m.trasco.vanilla.internal;
 
 import com.io7m.junreachable.UnimplementedCodeException;
+import com.io7m.junreachable.UnreachableCodeException;
 import com.io7m.trasco.api.TrArgumentNumeric;
 import com.io7m.trasco.api.TrArgumentString;
 import com.io7m.trasco.api.TrEventExecutingSQL;
@@ -28,6 +29,7 @@ import com.io7m.trasco.api.TrExecutorUpgrade;
 import com.io7m.trasco.api.TrSchemaRevision;
 import com.io7m.trasco.api.TrStatement;
 import com.io7m.trasco.api.TrStatementParameterized;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -198,6 +201,66 @@ public final class TrExecutor implements TrExecutorType
   }
 
   private void executeStatementParameterized(
+    final Connection connection,
+    final TrStatementParameterized st)
+    throws SQLException
+  {
+    switch (st.interpolation()) {
+      case PREPARED_STATEMENT ->
+        this.executeStatementParameterizedPrepared(connection, st);
+      case STRING_FORMATTING ->
+        this.executeStatementParameterizedManual(connection, st);
+    }
+  }
+
+  private void executeStatementParameterizedManual(
+    final Connection connection,
+    final TrStatementParameterized st)
+    throws SQLException
+  {
+    final var arguments =
+      this.configuration.arguments().arguments();
+    final var referencesInOrder =
+      st.references().inOrder();
+
+    final var formatArguments =
+      new Object[referencesInOrder.size()];
+
+    int index = 0;
+    for (final var order : referencesInOrder.keySet()) {
+      final var parameterRef =
+        referencesInOrder.get(order);
+      final var argument =
+        arguments.get(parameterRef.name());
+
+      if (argument instanceof final TrArgumentString s) {
+        formatArguments[index] =
+          "\'" + StringEscapeUtils.escapeJava(s.value()) + "\'";
+        ++index;
+        continue;
+      }
+
+      if (argument instanceof final TrArgumentNumeric n) {
+        formatArguments[index] = n.value().toString();
+        ++index;
+        continue;
+      }
+
+      throw new UnreachableCodeException();
+    }
+
+    final var formatted = String.format(st.text().strip(), formatArguments);
+    LOG.trace("execute: {}", formatted);
+
+    this.configuration.events()
+      .accept(new TrEventExecutingSQL(formatted));
+
+    try (Statement sql = connection.createStatement()) {
+      sql.execute(formatted);
+    }
+  }
+
+  private void executeStatementParameterizedPrepared(
     final Connection connection,
     final TrStatementParameterized st)
     throws SQLException

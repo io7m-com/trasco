@@ -18,6 +18,7 @@
 package com.io7m.trasco.tests;
 
 import com.io7m.anethum.api.ParsingException;
+import com.io7m.trasco.api.TrParameterInterpolation;
 import com.io7m.trasco.api.TrParameterReference;
 import com.io7m.trasco.api.TrParameterReferences;
 import com.io7m.trasco.api.TrSchemaRevision;
@@ -41,6 +42,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
+import static com.io7m.trasco.api.TrParameterInterpolation.PREPARED_STATEMENT;
+import static com.io7m.trasco.api.TrParameterInterpolation.STRING_FORMATTING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -171,7 +174,45 @@ create table x (f0 integer, f1 bigint, f2 varchar(100), f3 double, f4 decimal)
               ),
               """
 insert into x values (?, ?, ?, ?, ?)
-                              """.trim())
+                              """.trim(),
+              PREPARED_STATEMENT)
+          )
+        );
+
+      final var expected = new TreeMap<>();
+      expected.put(rev0.version(), rev0);
+
+      assertEquals(expected, set.revisions());
+    }
+  }
+
+  @Test
+  public void testExample6()
+    throws Exception
+  {
+    try (var stream = this.resourceOf("example-6.xml")) {
+      final var set =
+        this.parsers.parse(URI.create("urn:stdin"), stream);
+
+      final var rev0 =
+        new TrSchemaRevision(
+          BigInteger.ZERO,
+          List.of(
+            new TrStatement("""
+create table x (f0 integer, f1 bigint, f2 varchar(100), f3 double, f4 decimal)
+""".trim()),
+            new TrStatementParameterized(
+              TrParameterReferences.of(
+                new TrParameterReference(0, "number0"),
+                new TrParameterReference(1, "number1"),
+                new TrParameterReference(2, "string0"),
+                new TrParameterReference(3, "number2"),
+                new TrParameterReference(4, "number3")
+              ),
+              """
+insert into x values (%s, %s, %s, %s, %s)
+                              """.trim(),
+              STRING_FORMATTING)
           )
         );
 
