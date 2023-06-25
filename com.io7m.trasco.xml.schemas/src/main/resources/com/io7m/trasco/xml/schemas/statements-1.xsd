@@ -40,6 +40,19 @@
     </xsd:simpleType>
   </xsd:element>
 
+  <xsd:simpleType name="ParameterInterpolation">
+    <xsd:annotation>
+      <xsd:documentation>
+        The "ParameterInterpolation" type specifies how parameters are interpolated.
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="PREPARED_STATEMENT"/>
+      <xsd:enumeration value="STRING_FORMATTING"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
   <xsd:element name="StatementParameterized">
     <xsd:annotation>
       <xsd:documentation>
@@ -52,6 +65,19 @@
         <xsd:element ref="st:ParameterReferences"/>
         <xsd:element ref="st:Text"/>
       </xsd:sequence>
+
+      <xsd:attribute name="parameterInterpolation"
+                     use="optional"
+                     default="PREPARED_STATEMENT"
+                     type="st:ParameterInterpolation">
+        <xsd:annotation>
+          <xsd:documentation>
+            The kind of parameter interpolation to use to produce an SQL statement. This is necessary on some databases
+            that do not support variable interpolation for some kinds of statements. For example, PostgreSQL does not
+            support using prepared statements with variables for 'CREATE INDEX ...'.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
     </xsd:complexType>
   </xsd:element>
 
@@ -121,7 +147,9 @@
     </xsd:annotation>
 
     <xsd:complexType>
-      <xsd:attribute name="order" type="xsd:unsignedInt" use="required">
+      <xsd:attribute name="order"
+                     type="xsd:unsignedInt"
+                     use="required">
         <xsd:annotation>
           <xsd:documentation>
             The order in which this parameter will be supplied to the SQL statement.
@@ -129,7 +157,9 @@
         </xsd:annotation>
       </xsd:attribute>
 
-      <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:attribute name="name"
+                     type="xsd:string"
+                     use="required">
         <xsd:annotation>
           <xsd:documentation>
             The name of the parameter.
@@ -204,7 +234,8 @@
 
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:sequence minOccurs="0" maxOccurs="1">
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="1">
           <xsd:element ref="st:Parameters"/>
         </xsd:sequence>
 
