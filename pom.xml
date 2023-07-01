@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>7.7.0</version>
+    <version>8.0.0-beta0001</version>
   </parent>
 
   <groupId>com.io7m.trasco</groupId>
@@ -187,6 +187,11 @@
         <groupId>org.jgrapht</groupId>
         <artifactId>jgrapht-core</artifactId>
         <version>1.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jlexing</groupId>
+        <artifactId>com.io7m.jlexing.core</artifactId>
+        <version>3.1.0</version>
       </dependency>
 
       <!-- Build metadata -->

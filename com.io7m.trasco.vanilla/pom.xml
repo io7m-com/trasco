@@ -54,6 +54,10 @@
       <artifactId>com.io7m.blackthorne.jxe</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.io7m.jlexing</groupId>
+      <artifactId>com.io7m.jlexing.core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
