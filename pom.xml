@@ -34,8 +34,8 @@
     <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <derby.version>10.16.1.1</derby.version>
     <io7m.api.previousVersion>1.0.0</io7m.api.previousVersion>
-    <jqwik.version>1.7.3</jqwik.version>
-    <junit.version>5.9.3</junit.version>
+    <jqwik.version>1.7.4</jqwik.version>
+    <junit.version>5.10.0</junit.version>
   </properties>
 
   <licenses>
@@ -155,7 +155,7 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
         <exclusions>
           <exclusion>
             <groupId>com.sun.mail</groupId>
