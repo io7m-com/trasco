@@ -22,7 +22,7 @@ import com.io7m.anethum.api.ParseStatus;
 import com.io7m.anethum.api.ParsingException;
 import com.io7m.blackthorne.api.BTException;
 import com.io7m.blackthorne.api.BTParseError;
-import com.io7m.blackthorne.api.BTParseErrorType.Severity;
+import com.io7m.blackthorne.api.BTPreserveLexical;
 import com.io7m.blackthorne.jxe.BlackthorneJXE;
 import com.io7m.trasco.api.TrSchemaRevisionSet;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserType;
@@ -82,7 +82,7 @@ public final class TrSchemaSetRevisionParser
   }
 
   private static ParseSeverity mapSeverity(
-    final Severity severity)
+    final BTParseError.Severity severity)
   {
     return switch (severity) {
       case ERROR -> ParseSeverity.PARSE_ERROR;
@@ -105,7 +105,8 @@ public final class TrSchemaSetRevisionParser
               TrV1SchemaDeclSetParser::new
             )
           ),
-          TrSchemas.schemas()
+          TrSchemas.schemas(),
+          BTPreserveLexical.PRESERVE_LEXICAL_INFORMATION
         );
 
       return schemas;
