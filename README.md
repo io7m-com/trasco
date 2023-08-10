@@ -30,7 +30,7 @@ A minimalist system for relational database schema updates.
 
 ### Motivation
 
-Most relational databases involve declaring a schema ahead of time, detailing
+Most relational databases evolve declaring a schema ahead of time, detailing
 the tables, views, and functions. Most applications, as they involve, will
 require changes to be made to those schemas over time. The `trasco` package
 provides a minimal system for performing schema upgrades.
