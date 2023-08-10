@@ -18,7 +18,6 @@
 package com.io7m.trasco.tests;
 
 import com.io7m.anethum.api.ParsingException;
-import com.io7m.trasco.api.TrParameterInterpolation;
 import com.io7m.trasco.api.TrParameterReference;
 import com.io7m.trasco.api.TrParameterReferences;
 import com.io7m.trasco.api.TrSchemaRevision;
@@ -38,7 +37,6 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 

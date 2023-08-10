@@ -34,7 +34,6 @@ import static com.io7m.trasco.vanilla.TrStatementExclusion.ROLES;
 import static com.io7m.trasco.vanilla.TrStatementExclusion.TRIGGERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class TrSchemeRevisionSetSQLTest
 {

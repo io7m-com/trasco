@@ -16,8 +16,8 @@
 
 package com.io7m.trasco.vanilla.internal.v1;
 
-import com.io7m.blackthorne.api.BTElementHandlerType;
-import com.io7m.blackthorne.api.BTElementParsingContextType;
+import com.io7m.blackthorne.core.BTElementHandlerType;
+import com.io7m.blackthorne.core.BTElementParsingContextType;
 import com.io7m.trasco.api.TrParameterReference;
 import org.xml.sax.Attributes;
 

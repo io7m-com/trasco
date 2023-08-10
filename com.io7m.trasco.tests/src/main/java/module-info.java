@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,36 +14,21 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.trasco.vanilla.internal.v1;
-
-import com.io7m.blackthorne.core.BTQualifiedName;
-import com.io7m.trasco.xml.schemas.TrSchemas;
-
 /**
- * V1 convenience functions.
+ * SQL revision system (Test suite)
  */
 
-public final class TrV1
+open module com.io7m.trasco.tests
 {
-  private TrV1()
-  {
+  requires org.junit.jupiter.api;
+  requires org.junit.jupiter.engine;
+  requires org.junit.platform.commons;
+  requires org.junit.platform.engine;
 
-  }
+  requires com.io7m.trasco.api;
+  requires com.io7m.trasco.vanilla;
+  requires org.apache.derby.tools;
+  requires org.slf4j;
 
-  /**
-   * The element with the given name.
-   *
-   * @param localName The local name
-   *
-   * @return The qualified name
-   */
-
-  public static BTQualifiedName element(
-    final String localName)
-  {
-    return BTQualifiedName.of(
-      TrSchemas.schema1_0().namespace().toString(),
-      localName
-    );
-  }
+  exports com.io7m.trasco.tests;
 }

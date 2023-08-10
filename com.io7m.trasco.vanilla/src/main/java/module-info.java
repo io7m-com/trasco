@@ -27,12 +27,12 @@ module com.io7m.trasco.vanilla
 
   requires com.io7m.trasco.xml.schemas;
 
-  requires org.apache.commons.text;
   requires com.io7m.anethum.api;
-  requires com.io7m.blackthorne.api;
+  requires com.io7m.blackthorne.core;
   requires com.io7m.blackthorne.jxe;
   requires com.io7m.junreachable.core;
   requires com.io7m.jxe.core;
+  requires org.apache.commons.text;
   requires org.slf4j;
 
   exports com.io7m.trasco.vanilla;
