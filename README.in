@@ -84,7 +84,7 @@ multiple databases are present; if a user points the package at the wrong
 database, the mistake can be caught before any upgrades are attempted.
 
 In order to actually populate and upgrade databases, the `TrExecutor` class
-consumes a `TrSchemaRevisionSet` runs each revision update in order.
+consumes a `TrSchemaRevisionSet` and runs each revision update in order.
 
 The `TrExecutor` takes pair of functions that, given a database connection,
 retrieve the current schema version, and set the current schema version,
