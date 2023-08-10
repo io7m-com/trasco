@@ -39,7 +39,8 @@ The package assumes the use of a database with transactional DDL. That is,
 DDL commands such as `CREATE TABLE`, `ALTER TABLE`, and etc, can be executed
 inside transactions and committed or rolled back as necessary. If you are not
 using a database that supports transactional DDL, every upgrade has the
-potential to damage your database; use a better database.
+potential to damage your database whether or not you use `trasco`;
+use a better database.
 
 Databases known to support transactional DDL at the time of writing include:
 
