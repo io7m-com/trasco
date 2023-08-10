@@ -16,7 +16,7 @@
 
 package com.io7m.trasco.vanilla.internal.v1;
 
-import com.io7m.blackthorne.api.BTQualifiedName;
+import com.io7m.blackthorne.core.BTQualifiedName;
 import com.io7m.trasco.xml.schemas.TrSchemas;
 
 /**
