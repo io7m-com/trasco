@@ -15,6 +15,6 @@
     </c:release>
   </c:releases>
   <c:ticket-systems>
-    <c:ticket-system default="true" id="com.github.io7m.trasco" url="https://www.github.com/io7m/trasco/issues/"/>
+    <c:ticket-system default="true" id="com.github.io7m.trasco" url="https://www.github.com/io7m-com/trasco/issues/"/>
   </c:ticket-systems>
 </c:changelog>

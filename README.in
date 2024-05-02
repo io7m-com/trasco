@@ -7,7 +7,7 @@ A minimalist system for relational database schema updates.
 
   * Declare schemas, and upgrades to those schemas.
   * Reliably and atomically update databases.
-  * Written in pure Java 17.
+  * Written in pure Java 21.
   * [OSGi](https://www.osgi.org/) ready.
   * [JPMS](https://en.wikipedia.org/wiki/Java_Platform_Module_System) ready.
   * ISC license.
