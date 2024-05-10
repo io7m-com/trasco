@@ -8,12 +8,12 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>8.0.0-beta0001</version>
+    <version>8.2.0</version>
   </parent>
 
   <groupId>com.io7m.trasco</groupId>
   <artifactId>com.io7m.trasco</artifactId>
-  <version>1.1.0</version>
+  <version>2.0.0</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.trasco</name>
@@ -28,14 +28,19 @@
   </modules>
 
   <properties>
-    <com.io7m.blackthorne.version>2.0.0</com.io7m.blackthorne.version>
-    <com.io7m.jxtrand.version>2.0.0</com.io7m.jxtrand.version>
-    <com.io7m.seltzer.version>1.0.0</com.io7m.seltzer.version>
-    <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
-    <derby.version>10.16.1.1</derby.version>
-    <io7m.api.previousVersion>1.0.0</io7m.api.previousVersion>
-    <jqwik.version>1.7.4</jqwik.version>
-    <junit.version>5.10.0</junit.version>
+    <!-- Configuration -->
+    <io7m.api.previousVersion>1.1.0</io7m.api.previousVersion>
+    <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
+
+    <!-- io7m dependencies. -->
+    <com.io7m.blackthorne.version>2.0.1</com.io7m.blackthorne.version>
+    <com.io7m.jxtrand.version>2.1.0</com.io7m.jxtrand.version>
+    <com.io7m.seltzer.version>1.0.1</com.io7m.seltzer.version>
+
+    <!-- Third-party dependencies. -->
+    <derby.version>10.17.1.0</derby.version>
+    <jqwik.version>1.8.4</jqwik.version>
+    <junit.version>5.10.2</junit.version>
   </properties>
 
   <licenses>
@@ -46,9 +51,9 @@
   </licenses>
 
   <scm>
-    <url>https://www.github.com/io7m/trasco</url>
-    <connection>scm:git:https://github.com/io7m/trasco</connection>
-    <developerConnection>scm:git:https://github.com/io7m/trasco</developerConnection>
+    <url>https://www.github.com/io7m-com/trasco</url>
+    <connection>scm:git:https://www.github.com/io7m-com/trasco</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/trasco</developerConnection>
   </scm>
 
   <developers>
@@ -61,7 +66,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://www.github.com/io7m/trasco/issues</url>
+    <url>https://www.github.com/io7m-com/trasco/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -83,7 +88,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://github.com/trasco/actions</url>
+    <url>https://www.github.com/io7m-com/trasco/actions</url>
   </ciManagement>
 
   <prerequisites>
@@ -103,24 +108,9 @@
         <version>${com.io7m.jxtrand.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.io7m.jaffirm</groupId>
-        <artifactId>com.io7m.jaffirm.core</artifactId>
-        <version>4.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.jtensors</groupId>
-        <artifactId>com.io7m.jtensors.core</artifactId>
-        <version>10.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.jmulticlose</groupId>
-        <artifactId>com.io7m.jmulticlose.core</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.anethum</groupId>
         <artifactId>com.io7m.anethum.api</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.1</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.blackthorne</groupId>
@@ -140,22 +130,22 @@
       <dependency>
         <groupId>com.io7m.jxe</groupId>
         <artifactId>com.io7m.jxe.core</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.13.0</version>
+        <version>2.16.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.13</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.11</version>
+        <version>1.5.6</version>
         <exclusions>
           <exclusion>
             <groupId>com.sun.mail</groupId>
@@ -166,32 +156,17 @@
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
-        <version>1.10.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.xstructural</groupId>
-        <artifactId>com.io7m.xstructural.cmdline</artifactId>
-        <version>${com.io7m.xstructural.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.xstructural</groupId>
-        <artifactId>com.io7m.xstructural.xml</artifactId>
-        <version>${com.io7m.xstructural.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jgrapht</groupId>
-        <artifactId>jgrapht-core</artifactId>
-        <version>1.5.2</version>
+        <version>1.12.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jlexing</groupId>
         <artifactId>com.io7m.jlexing.core</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
       </dependency>
 
       <!-- Build metadata -->
