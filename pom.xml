@@ -39,7 +39,7 @@
 
     <!-- Third-party dependencies. -->
     <derby.version>10.17.1.0</derby.version>
-    <jqwik.version>1.8.4</jqwik.version>
+    <jqwik.version>1.8.5</jqwik.version>
     <junit.version>5.10.2</junit.version>
   </properties>
 
