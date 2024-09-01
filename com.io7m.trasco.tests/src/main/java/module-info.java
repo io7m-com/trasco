@@ -24,10 +24,11 @@ open module com.io7m.trasco.tests
   requires org.junit.jupiter.engine;
   requires org.junit.platform.commons;
   requires org.junit.platform.engine;
+  requires org.junit.platform.launcher;
 
+  requires org.xerial.sqlitejdbc;
   requires com.io7m.trasco.api;
   requires com.io7m.trasco.vanilla;
-  requires org.apache.derby.tools;
   requires org.slf4j;
 
   exports com.io7m.trasco.tests;

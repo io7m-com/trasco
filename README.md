@@ -4,7 +4,7 @@ trasco
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.trasco/com.io7m.trasco.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.trasco%22)
 [![Maven Central (snapshot)](https://img.shields.io/nexus/s/com.io7m.trasco/com.io7m.trasco?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/trasco/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m-com/trasco.svg?style=flat-square)](https://codecov.io/gh/io7m-com/trasco)
-![Java Version](https://img.shields.io/badge/21-java?label=java&color=e6c35c)
+![Java Version](https://img.shields.io/badge/17-java?label=java&color=e65cc3)
 
 ![com.io7m.trasco](./src/site/resources/trasco.jpg?raw=true)
 
@@ -23,7 +23,7 @@ A minimalist system for relational database schema updates.
 
   * Declare schemas, and upgrades to those schemas.
   * Reliably and atomically update databases.
-  * Written in pure Java 21.
+  * Written in pure Java 17.
   * [OSGi](https://www.osgi.org/) ready.
   * [JPMS](https://en.wikipedia.org/wiki/Java_Platform_Module_System) ready.
   * ISC license.

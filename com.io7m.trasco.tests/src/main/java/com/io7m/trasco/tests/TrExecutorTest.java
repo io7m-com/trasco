@@ -27,10 +27,12 @@ import com.io7m.trasco.api.TrExecutorConfiguration;
 import com.io7m.trasco.api.TrSchemaRevisionSet;
 import com.io7m.trasco.vanilla.TrExecutors;
 import com.io7m.trasco.vanilla.TrSchemaRevisionSetParsers;
-import org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
+import org.sqlite.SQLiteOpenMode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class TrExecutorTest
 {
   private Path database;
-  private EmbeddedConnectionPoolDataSource dataSource;
+  private SQLiteDataSource dataSource;
   private TrExecutors executors;
   private TrSchemaRevisionSetParsers parsers;
   private ArrayDeque<TrEventType> events;
@@ -66,10 +68,16 @@ public final class TrExecutorTest
     this.parsers = new TrSchemaRevisionSetParsers();
     this.executors = new TrExecutors();
     this.database = TrTestDirectories.createTempDirectory();
-    this.dataSource = new EmbeddedConnectionPoolDataSource();
-    this.dataSource.setDatabaseName(this.database.resolve("db").toString());
-    this.dataSource.setCreateDatabase("true");
-    this.dataSource.setConnectionAttributes("create=true");
+
+    final var dbFile =
+      this.database.resolve("db").toString();
+
+    final var config = new SQLiteConfig();
+    config.setOpenMode(SQLiteOpenMode.CREATE);
+
+    this.dataSource = new SQLiteDataSource(config);
+    this.dataSource.setUrl("jdbc:sqlite:" + dbFile);
+    this.dataSource.setDatabaseName(dbFile);
     this.events = new ArrayDeque<TrEventType>();
   }
 
