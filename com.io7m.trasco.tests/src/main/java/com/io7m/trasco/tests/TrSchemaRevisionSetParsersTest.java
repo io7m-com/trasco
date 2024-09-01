@@ -94,11 +94,11 @@ public final class TrSchemaRevisionSetParsersTest
             new TrStatement(
             """
               create table schema_version (
-                version_lock   char(1) not null default 'X',
-                version_number bigint  not null,
+                version_lock   integer not null default 1,
+                version_number integer  not null,
                           
                 constraint check_lock_primary primary key (version_lock),
-                constraint check_lock_locked check (version_lock = 'X')
+                constraint check_lock_locked check (version_lock = 1)
               )
                             """.trim())
           )
@@ -110,7 +110,7 @@ public final class TrSchemaRevisionSetParsersTest
           List.of(new TrStatement(
             """
               create table example0 (
-                user_id char(16) for bit data not null primary key
+                user_id text not null primary key
               )
                             """.trim()
           ))

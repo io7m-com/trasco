@@ -38,9 +38,10 @@
     <com.io7m.seltzer.version>1.1.0</com.io7m.seltzer.version>
 
     <!-- Third-party dependencies. -->
-    <derby.version>10.17.1.0</derby.version>
     <jqwik.version>1.9.0</jqwik.version>
     <junit.version>5.11.0</junit.version>
+    <org.xerial.sqlite-jdbc.version>3.46.0.1</org.xerial.sqlite-jdbc.version>
+    <org.junit.version>5.11.0</org.junit.version>
   </properties>
 
   <licenses>
@@ -168,6 +169,11 @@
         <artifactId>com.io7m.jlexing.core</artifactId>
         <version>3.2.0</version>
       </dependency>
+      <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>${org.xerial.sqlite-jdbc.version}</version>
+      </dependency>
 
       <!-- Build metadata -->
       <dependency>
@@ -183,24 +189,11 @@
 
       <!-- Test suite -->
       <dependency>
-        <groupId>org.apache.derby</groupId>
-        <artifactId>derby</artifactId>
-        <version>${derby.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.derby</groupId>
-        <artifactId>derbyshared</artifactId>
-        <version>${derby.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.derby</groupId>
-        <artifactId>derbytools</artifactId>
-        <version>${derby.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.derby</groupId>
-        <artifactId>derbynet</artifactId>
-        <version>${derby.version}</version>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>net.jqwik</groupId>
@@ -211,16 +204,6 @@
         <groupId>net.jqwik</groupId>
         <artifactId>jqwik-api</artifactId>
         <version>${jqwik.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
