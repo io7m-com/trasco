@@ -13,7 +13,7 @@
         <c:change date="2023-08-10T00:00:00+00:00" summary="Update com.io7m.blackthorne 1.3.1 → 2.0.0."/>
       </c:changes>
     </c:release>
-    <c:release date="2024-05-10T16:09:24+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="2.0.0">
+    <c:release date="2024-05-10T00:00:00+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="2.0.0">
       <c:changes>
         <c:change date="2024-04-19T00:00:00+00:00" summary="Update org.slf4j:slf4j-api:2.0.10 → 2.0.13."/>
         <c:change date="2024-04-19T00:00:00+00:00" summary="Update commons-io:commons-io:2.15.1 → 2.16.1."/>
@@ -32,6 +32,11 @@
         <c:change date="2024-05-10T00:00:00+00:00" summary="Update com.io7m.jmulticlose:com.io7m.jmulticlose.core:1.1.2 → 1.1.3."/>
         <c:change date="2024-05-10T00:00:00+00:00" summary="Update com.io7m.jxtrand.version:2.0.0 → 2.1.0."/>
         <c:change date="2024-05-10T00:00:00+00:00" summary="Update com.io7m.blackthorne.version:2.0.0 → 2.0.1."/>
+      </c:changes>
+    </c:release>
+    <c:release date="2024-09-01T10:28:01+00:00" is-open="true" ticket-system="com.github.io7m.trasco" version="2.0.1">
+      <c:changes>
+        <c:change date="2024-09-01T10:28:01+00:00" summary="Only require JDK 17."/>
       </c:changes>
     </c:release>
   </c:releases>
