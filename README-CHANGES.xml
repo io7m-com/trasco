@@ -34,9 +34,19 @@
         <c:change date="2024-05-10T00:00:00+00:00" summary="Update com.io7m.blackthorne.version:2.0.0 → 2.0.1."/>
       </c:changes>
     </c:release>
-    <c:release date="2024-09-01T10:28:01+00:00" is-open="true" ticket-system="com.github.io7m.trasco" version="2.0.1">
+    <c:release date="2024-09-01T10:28:42+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="2.0.1">
       <c:changes>
-        <c:change date="2024-09-01T10:28:01+00:00" summary="Only require JDK 17."/>
+        <c:change date="2024-05-27T00:00:00+00:00" summary="Update jqwik.version:1.8.4 → 1.8.5."/>
+        <c:change date="2024-06-28T00:00:00+00:00" summary="Update junit.version:5.10.2 → 5.10.3."/>
+        <c:change date="2024-07-01T00:00:00+00:00" summary="Update jqwik.version:1.8.5 → 1.9.0."/>
+        <c:change date="2024-08-05T00:00:00+00:00" summary="Update com.io7m.seltzer:com.io7m.seltzer.api:1.0.1 → 1.1.0."/>
+        <c:change date="2024-08-07T00:00:00+00:00" summary="Update org.slf4j:slf4j-api:2.0.13 → 2.0.14."/>
+        <c:change date="2024-08-09T00:00:00+00:00" summary="Update org.slf4j:slf4j-api:2.0.14 → 2.0.15."/>
+        <c:change date="2024-08-12T00:00:00+00:00" summary="Update org.slf4j:slf4j-api:2.0.15 → 2.0.16."/>
+        <c:change date="2024-08-15T00:00:00+00:00" summary="Update junit.version:5.10.3 → 5.11.0."/>
+        <c:change date="2024-08-16T00:00:00+00:00" summary="Update ch.qos.logback:logback-classic:1.5.6 → 1.5.7."/>
+        <c:change date="2024-08-19T00:00:00+00:00" summary="Update com.io7m.blackthorne.version:2.0.1 → 2.0.2."/>
+        <c:change date="2024-09-01T00:00:00+00:00" summary="Only require JDK 17."/>
       </c:changes>
     </c:release>
   </c:releases>
