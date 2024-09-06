@@ -13,7 +13,7 @@
 
   <groupId>com.io7m.trasco</groupId>
   <artifactId>com.io7m.trasco</artifactId>
-  <version>2.0.1</version>
+  <version>3.0.0</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.trasco</name>
@@ -29,18 +29,19 @@
 
   <properties>
     <!-- Configuration -->
-    <io7m.api.previousVersion>2.0.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>2.0.1</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>17</io7m.java.targetJavaVersion>
 
     <!-- io7m dependencies. -->
     <com.io7m.blackthorne.version>2.0.2</com.io7m.blackthorne.version>
+    <com.io7m.jxe.version>2.0.0</com.io7m.jxe.version>
     <com.io7m.jxtrand.version>2.1.0</com.io7m.jxtrand.version>
     <com.io7m.seltzer.version>1.1.0</com.io7m.seltzer.version>
 
     <!-- Third-party dependencies. -->
     <jqwik.version>1.9.0</jqwik.version>
     <junit.version>5.11.0</junit.version>
-    <org.xerial.sqlite-jdbc.version>3.46.0.1</org.xerial.sqlite-jdbc.version>
+    <org.xerial.sqlite-jdbc.version>3.46.1.0</org.xerial.sqlite-jdbc.version>
     <org.junit.version>5.11.0</org.junit.version>
   </properties>
 
@@ -131,7 +132,7 @@
       <dependency>
         <groupId>com.io7m.jxe</groupId>
         <artifactId>com.io7m.jxe.core</artifactId>
-        <version>1.0.3</version>
+        <version>${com.io7m.jxe.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>

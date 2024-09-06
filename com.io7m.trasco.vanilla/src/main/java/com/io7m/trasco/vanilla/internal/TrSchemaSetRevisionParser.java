@@ -24,6 +24,8 @@ import com.io7m.blackthorne.core.BTException;
 import com.io7m.blackthorne.core.BTParseError;
 import com.io7m.blackthorne.core.BTPreserveLexical;
 import com.io7m.blackthorne.jxe.BlackthorneJXE;
+import com.io7m.jxe.core.JXEHardenedSAXParsers;
+import com.io7m.jxe.core.JXEXInclude;
 import com.io7m.trasco.api.TrSchemaRevisionSet;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserType;
 import com.io7m.trasco.vanilla.internal.v1.TrV1SchemaDeclSetParser;
@@ -35,6 +37,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -50,20 +53,25 @@ public final class TrSchemaSetRevisionParser
   private final URI source;
   private final InputStream stream;
   private final Consumer<ParseStatus> statusConsumer;
+  private final JXEHardenedSAXParsers parsers;
 
   /**
    * A parser of revision sets.
    *
+   * @param inParsers        The SAX parser provider
+   * @param inSource         The source
    * @param inStream         The stream
    * @param inStatusConsumer A status consumer
-   * @param inSource         The source
    */
 
   public TrSchemaSetRevisionParser(
+    final JXEHardenedSAXParsers inParsers,
     final URI inSource,
     final InputStream inStream,
     final Consumer<ParseStatus> inStatusConsumer)
   {
+    this.parsers =
+      Objects.requireNonNull(inParsers, "inParsers");
     this.source =
       Objects.requireNonNull(inSource, "source");
     this.stream =
@@ -96,7 +104,7 @@ public final class TrSchemaSetRevisionParser
   {
     try {
       final TrSchemaRevisionSet schemas =
-        BlackthorneJXE.parse(
+        BlackthorneJXE.parseAll(
           this.source,
           this.stream,
           Map.ofEntries(
@@ -105,8 +113,11 @@ public final class TrSchemaSetRevisionParser
               TrV1SchemaDeclSetParser::new
             )
           ),
-          TrSchemas.schemas(),
-          BTPreserveLexical.PRESERVE_LEXICAL_INFORMATION
+          this.parsers,
+          Optional.empty(),
+          JXEXInclude.XINCLUDE_DISABLED,
+          BTPreserveLexical.PRESERVE_LEXICAL_INFORMATION,
+          TrSchemas.schemas()
         );
 
       return schemas;

@@ -26,10 +26,11 @@ open module com.io7m.trasco.tests
   requires org.junit.platform.engine;
   requires org.junit.platform.launcher;
 
-  requires org.xerial.sqlitejdbc;
+  requires com.io7m.anethum.api;
   requires com.io7m.trasco.api;
   requires com.io7m.trasco.vanilla;
   requires org.slf4j;
+  requires org.xerial.sqlitejdbc;
 
   exports com.io7m.trasco.tests;
 }

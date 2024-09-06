@@ -23,8 +23,7 @@ module com.io7m.trasco.vanilla
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
-  requires transitive com.io7m.trasco.api;
-
+  requires com.io7m.trasco.api;
   requires com.io7m.trasco.xml.schemas;
 
   requires com.io7m.anethum.api;
@@ -32,6 +31,7 @@ module com.io7m.trasco.vanilla
   requires com.io7m.blackthorne.jxe;
   requires com.io7m.junreachable.core;
   requires com.io7m.jxe.core;
+  requires java.sql;
   requires org.apache.commons.text;
   requires org.slf4j;
 

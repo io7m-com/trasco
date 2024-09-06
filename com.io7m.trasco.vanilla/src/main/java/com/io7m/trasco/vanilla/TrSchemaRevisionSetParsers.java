@@ -17,6 +17,7 @@
 package com.io7m.trasco.vanilla;
 
 import com.io7m.anethum.api.ParseStatus;
+import com.io7m.jxe.core.JXEHardenedSAXParsers;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserFactoryType;
 import com.io7m.trasco.api.TrSchemaRevisionSetParserType;
 import com.io7m.trasco.vanilla.internal.TrSchemaSetRevisionParser;
@@ -44,7 +45,7 @@ public final class TrSchemaRevisionSetParsers
 
   @Override
   public TrSchemaRevisionSetParserType createParserWithContext(
-    final Object context,
+    final JXEHardenedSAXParsers context,
     final URI source,
     final InputStream stream,
     final Consumer<ParseStatus> statusConsumer)
@@ -53,6 +54,11 @@ public final class TrSchemaRevisionSetParsers
     Objects.requireNonNull(stream, "stream");
     Objects.requireNonNull(statusConsumer, "statusConsumer");
 
-    return new TrSchemaSetRevisionParser(source, stream, statusConsumer);
+    return new TrSchemaSetRevisionParser(
+      Objects.requireNonNullElse(context, new JXEHardenedSAXParsers()),
+      source,
+      stream,
+      statusConsumer
+    );
   }
 }

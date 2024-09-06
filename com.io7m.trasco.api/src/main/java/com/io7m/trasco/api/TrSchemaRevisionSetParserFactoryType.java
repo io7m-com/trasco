@@ -18,13 +18,14 @@
 package com.io7m.trasco.api;
 
 import com.io7m.anethum.api.ParserFactoryType;
+import com.io7m.jxe.core.JXEHardenedSAXParsers;
 
 /**
  * A factory of revision set parsers.
  */
 
 public interface TrSchemaRevisionSetParserFactoryType
-  extends ParserFactoryType<Object, TrSchemaRevisionSet, TrSchemaRevisionSetParserType>
+  extends ParserFactoryType<JXEHardenedSAXParsers, TrSchemaRevisionSet, TrSchemaRevisionSetParserType>
 {
 
 }
