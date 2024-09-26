@@ -41,7 +41,7 @@
     <!-- Third-party dependencies. -->
     <jqwik.version>1.9.0</jqwik.version>
     <junit.version>5.11.0</junit.version>
-    <org.xerial.sqlite-jdbc.version>3.46.1.0</org.xerial.sqlite-jdbc.version>
+    <org.xerial.sqlite-jdbc.version>3.46.1.2</org.xerial.sqlite-jdbc.version>
     <org.junit.version>5.11.0</org.junit.version>
   </properties>
 
