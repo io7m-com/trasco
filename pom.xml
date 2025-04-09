@@ -40,7 +40,7 @@
 
     <!-- Third-party dependencies. -->
     <jqwik.version>1.9.2</jqwik.version>
-    <junit.version>5.11.4</junit.version>
+    <junit.version>5.12.1</junit.version>
     <org.xerial.sqlite-jdbc.version>3.48.0.0</org.xerial.sqlite-jdbc.version>
     <org.junit.version>5.11.0</org.junit.version>
   </properties>
