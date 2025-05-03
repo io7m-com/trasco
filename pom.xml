@@ -8,12 +8,12 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>8.2.0</version>
+    <version>8.5.0</version>
   </parent>
 
   <groupId>com.io7m.trasco</groupId>
   <artifactId>com.io7m.trasco</artifactId>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.trasco</name>
@@ -22,14 +22,15 @@
 
   <modules>
     <module>com.io7m.trasco.api</module>
+    <module>com.io7m.trasco.bom</module>
+    <module>com.io7m.trasco.tests</module>
     <module>com.io7m.trasco.vanilla</module>
     <module>com.io7m.trasco.xml.schemas</module>
-    <module>com.io7m.trasco.tests</module>
   </modules>
 
   <properties>
     <!-- Configuration -->
-    <io7m.api.previousVersion>2.0.1</io7m.api.previousVersion>
+    <io7m.api.previousVersion>3.0.0</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>17</io7m.java.targetJavaVersion>
 
     <!-- io7m dependencies. -->
@@ -39,9 +40,9 @@
     <com.io7m.seltzer.version>1.1.0</com.io7m.seltzer.version>
 
     <!-- Third-party dependencies. -->
-    <jqwik.version>1.9.0</jqwik.version>
-    <junit.version>5.11.0</junit.version>
-    <org.xerial.sqlite-jdbc.version>3.46.1.0</org.xerial.sqlite-jdbc.version>
+    <jqwik.version>1.9.2</jqwik.version>
+    <junit.version>5.12.2</junit.version>
+    <org.xerial.sqlite-jdbc.version>3.49.1.0</org.xerial.sqlite-jdbc.version>
     <org.junit.version>5.11.0</org.junit.version>
   </properties>
 
@@ -137,17 +138,17 @@
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.16.1</version>
+        <version>2.19.0</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.16</version>
+        <version>2.0.17</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.5.7</version>
+        <version>1.5.18</version>
         <exclusions>
           <exclusion>
             <groupId>com.sun.mail</groupId>
@@ -163,7 +164,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
-        <version>1.12.0</version>
+        <version>1.13.1</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jlexing</groupId>

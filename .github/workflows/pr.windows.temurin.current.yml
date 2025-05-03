@@ -9,7 +9,7 @@ name: pr.windows.temurin.current
 
 on:
   pull_request:
-    branches: [ develop, feature/*, release/* ]
+    branches: [ master, main, develop, feature/*, release/* ]
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
       - name: JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 22
+          java-version: 23
           distribution: 'temurin'
 
       - name: Collect project version

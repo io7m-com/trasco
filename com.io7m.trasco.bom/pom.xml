@@ -12,27 +12,28 @@
     <version>3.1.0</version>
   </parent>
 
-  <artifactId>com.io7m.trasco.xml.schemas</artifactId>
+  <artifactId>com.io7m.trasco.bom</artifactId>
 
-  <name>com.io7m.trasco.xml.schemas</name>
-  <description>SQL revision system (XML Schemas)</description>
+  <packaging>pom</packaging>
+  <name>com.io7m.trasco.bom</name>
+  <description>SQL revision system (BOM)</description>
   <url>https://www.io7m.com/software/trasco</url>
 
   <dependencies>
     <dependency>
-      <groupId>com.io7m.jxe</groupId>
-      <artifactId>com.io7m.jxe.core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.annotation.bundle</artifactId>
-      <scope>provided</scope>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.trasco.api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.annotation.versioning</artifactId>
-      <scope>provided</scope>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.trasco.xml.schemas</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.trasco.vanilla</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
