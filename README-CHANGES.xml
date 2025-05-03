@@ -56,7 +56,7 @@
         <c:change date="2024-09-01T00:00:00+00:00" summary="Update com.io7m.jxe:com.io7m.jxe.core:1.0.3 → 1.1.0."/>
       </c:changes>
     </c:release>
-    <c:release date="2025-05-03T15:47:41+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="3.1.0">
+    <c:release date="2025-05-03T00:00:00+00:00" is-open="false" ticket-system="com.github.io7m.trasco" version="3.1.0">
       <c:changes>
         <c:change date="2024-09-09T00:00:00+00:00" summary="Update ch.qos.logback:logback-classic:1.5.7 → 1.5.8."/>
         <c:change date="2024-09-19T00:00:00+00:00" summary="Update commons-io:commons-io:2.16.1 → 2.17.0."/>
@@ -90,6 +90,11 @@
         <c:change date="2025-05-01T00:00:00+00:00" summary="Update org.apache.commons:commons-text:1.13.0 → 1.13.1."/>
         <c:change date="2025-05-03T00:00:00+00:00" summary="Publish a com.io7m.trasco.bom module."/>
         <c:change date="2025-05-03T00:00:00+00:00" summary="Update org.xerial:sqlite-jdbc:3.48.0.0 → 3.49.1.0."/>
+      </c:changes>
+    </c:release>
+    <c:release date="2025-05-03T16:23:35+00:00" is-open="true" ticket-system="com.github.io7m.trasco" version="3.1.1">
+      <c:changes>
+        <c:change date="2025-05-03T16:23:35+00:00" summary="Fix BOM."/>
       </c:changes>
     </c:release>
   </c:releases>
