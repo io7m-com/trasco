@@ -40,7 +40,7 @@
     <com.io7m.seltzer.version>1.2.0</com.io7m.seltzer.version>
 
     <!-- Third-party dependencies. -->
-    <jqwik.version>1.9.2</jqwik.version>
+    <jqwik.version>1.9.3</jqwik.version>
     <junit.version>5.13.4</junit.version>
     <org.xerial.sqlite-jdbc.version>3.50.3.0</org.xerial.sqlite-jdbc.version>
     <org.junit.version>5.11.0</org.junit.version>
